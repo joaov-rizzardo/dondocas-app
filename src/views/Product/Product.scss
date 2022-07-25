@@ -1,0 +1,12 @@
+.Product{
+    .buttons{
+        display: flex;
+        gap: 10px;
+        
+        button{
+            background: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+    }
+}
