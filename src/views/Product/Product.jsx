@@ -1,13 +1,39 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useState, useReducer } from 'react'
+import { useState, useReducer, useEffect } from 'react'
 import './Product.scss'
 import { Form } from 'react-bootstrap';
 import { innitialState, reducer } from '../../reducers/productRegister/productRegister';
+import axios from 'axios';
+import baseUrl from '../../configs/Url';
 
 export default function Product() {
 
     const [modalStatus, setModalStatus] = useState(false)
+
+    const [categories, setCategories] = useState([])
+
+    const [subcategories, setSubcategories] = useState([])
+
+    const handleGetCategories = async () => {
+        const res = await axios.get(`${baseUrl.backendApi}/category/get`)
+        
+        setCategories(res.data)
+    }
+
+    const handleGetSubcategories = async () => {
+        const res = await axios.get(`${baseUrl.backendApi}/subcategory/get`)
+
+        setSubcategories(res.data)
+    }
+
+    useEffect(() => {
+
+        handleGetCategories()
+
+        handleGetSubcategories()
+        
+    }, [])
 
     const handleClose = () => {
         setModalStatus(false)
@@ -131,7 +157,7 @@ export default function Product() {
             {/*
                 FIM DO MODAL PARA CADASTRO DE PRODUTOS    
             */}
-            
+
             <div className="buttons">
                 <button onClick={handleShow}>Novo produto</button>
             </div>
