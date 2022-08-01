@@ -5,7 +5,8 @@ export const innitialState = {
     productDeferredPaymentValue: '',
     productPurchaseValue: '',
     productCategory: '',
-    productSubcategory: ''
+    productSubcategory: '',
+    productUpdate: false
 }
 
 export function reducer(state, action) {
@@ -55,7 +56,7 @@ export function reducer(state, action) {
         case 'changeSubcategory':
             return {
                 ...state,
-                productsubCategory: action.value
+                productSubcategory: action.value
             }
             break
 
