@@ -9,6 +9,8 @@ import baseUrl from '../../configs/Url';
 import Alert from '../../components/Alert/Alert';
 import { innitialAlert, alertReducer } from '../../reducers/alertModal/alertModal';
 import { ClipLoader } from 'react-spinners';
+import ProductItem from '../../components/ProductItem/ProducItem';
+
 
 export default function Product() {
 
@@ -272,7 +274,16 @@ export default function Product() {
             </div>
 
             <div className="products-list">
-
+                <ProductItem />
+                <ProductItem />
+                <ProductItem />
+                <ProductItem />
+                <ProductItem />
+                <ProductItem />
+                <ProductItem />
+                <ProductItem />
+                <ProductItem />
+                <ProductItem />
             </div>
         </div>
     )
