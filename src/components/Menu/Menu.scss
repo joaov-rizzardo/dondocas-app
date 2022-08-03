@@ -1,5 +1,7 @@
+@import '../../configs/Colors.scss';
+
 .Menu {
-    background: rgb(37, 37, 37);
+    background: $fourthColor;
     text-align: center;
     flex-direction: column;
     align-items: center;
@@ -9,7 +11,7 @@
 
     h1 {
         text-transform: uppercase;
-        color: #fff;
+        color: $primaryColor;
         letter-spacing: 1.2;
     }
 
@@ -18,15 +20,15 @@
         gap: 5px;
         margin-top: 20px;
         a{
-            color: white;
+            color: $primaryColor;
             text-decoration: none;
             padding: 10px 20px;
-            border: 1px solid #f8f8f8;
+            border: 1px solid $primaryColor;
             border-radius: 5px;
 
             &:hover{
-                color: #daa520;
-                border-color: #daa520;
+                color: $hoverColor;
+                border-color: $hoverColor;
             }
         }
     }

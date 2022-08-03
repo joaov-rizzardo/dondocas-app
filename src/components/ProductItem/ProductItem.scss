@@ -1,10 +1,13 @@
+@import '../../configs/Colors.scss';
+
 .ProductItem{
     display: grid;
     grid-template-columns: 5% 75% 15%;
     grid-template-rows: 1fr;
     justify-content: space-between;
     align-items: center;
-    background: #000;
+    background: $secondaryColor;
+    border: 1px solid $thirdColor;
     height: 80px;
     border-radius: 10px;
     padding: 0 20px;
@@ -13,12 +16,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        color: #fff;
+        color: $primaryColor;
         font-size: 1.2em;
         border-radius: 50%;
         width: 3em;
         height: 3em;
-        background: gray;
+        background: $thirdColor;
     }
 
     .product-data{
@@ -31,9 +34,10 @@
             align-items: center;
             span{
                 display: block;
-                color: gray;
+                color: $textColor;
                 &.title{
-                    color: yellow;  
+                    color: $thirdColor;
+                    font-weight: 500;
                 }
             }
         }
@@ -43,10 +47,17 @@
     .product-buttons{
         display: flex;
         justify-content: space-around;
+        background: none;
+        border: none;
         button{
             background: none;
-            color: yellow;
+            border: none;
+            color: $fourthColor;
             font-size: 25px;
+
+            &:hover{
+                color: $hoverColor;
+            }
         }
     }
 }
