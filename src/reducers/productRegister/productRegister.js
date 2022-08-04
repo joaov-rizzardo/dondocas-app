@@ -1,4 +1,5 @@
 export const innitialState = {
+    productKey: null,
     productCode: '',
     productDescription: '',
     productCashPaymentValue: '',
@@ -12,7 +13,7 @@ export const innitialState = {
 export function reducer(state, action) {
     switch (action.type) {
         case 'changeCode':
-            return {
+            return {    
                 ...state,
                 productCode: action.value
             }
@@ -62,6 +63,20 @@ export function reducer(state, action) {
 
         case 'clearFields':
             return innitialState
+            break
+
+        case 'handleMakeProduct':
+            return {
+                productKey: action.productKey,
+                productCode: action.productCode,
+                productDescription: action.productDescription,
+                productCashPaymentValue: action.productCashPaymentValue,
+                productDeferredPaymentValue: action.productDeferredPaymentValue,
+                productPurchaseValue: action.productPurchaseValue,
+                productCategory: action.productCategory,
+                productSubcategory: action.productSubcategory,
+                productUpdate: true
+            }
             break
         
         default:

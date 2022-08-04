@@ -1,0 +1,21 @@
+@import '../../configs/Colors.scss';
+
+.Alert{
+    .modal-header{
+        background: $thirdColor;
+        color: $primaryColor;
+    }
+
+    .modal-footer{
+        button{
+            background: $thirdColor;
+            border-color: $thirdColor;
+            color: $primaryColor;
+
+            &:hover{
+                filter: brightness(0.9);
+            }
+        }
+        
+    }
+}

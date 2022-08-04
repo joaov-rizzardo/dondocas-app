@@ -18,6 +18,10 @@ export default function Product() {
 
     const [categories, setCategories] = useState([])
 
+    const [products, setProducts] = useState([])
+
+    const [productItems, setProductItems] = useState([])
+
     const [subcategories, setSubcategories] = useState([])
 
     const [categoriesOptions, setCategoriesOptions] = useState([])
@@ -54,19 +58,13 @@ export default function Product() {
         }))
     }
 
-    // SELECIONA AS SUBCATEGORIAS DISPONÍVEIS COM BASE NA CATEGORIAS SELECIONADA
-    const changeSubcategories = category_key => {
-        const availableSubcategories = subcategories.filter((subcategory) => {
-            if (category_key == subcategory.category_key) {
-                return subcategory
-            }
-        }, category_key)
+    const handleGetProducts = async () => {
+        const res = await axios.get(`${baseUrl.backendApi}/product/get`)
+            .catch(error => {
+                handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao seu comunicar com o servidor - ${error.message}` })
+            })
 
-        const options = availableSubcategories.map(subcategory => {
-            return (<option key={subcategory.subcategory_key} value={subcategory.subcategory_key}>{subcategory.subcategory_description}</option>)
-        })
-
-        setSubcategoriesOptions(options)
+        setProducts(res.data)
     }
 
     // BUSCA AS SUBCATEGORIAS
@@ -93,21 +91,21 @@ export default function Product() {
             }
         }
 
-        // VALIDAÇÃO SE UM PRODUTO COM O MESMO CÓDIGO JÁ EXISTE (APENAS NA OPERAÇÃO DE CREATE)
-        if (!state.productUpdate) {
-            const response = await axios.get(`${baseUrl.backendApi}/product/get/${state.productSubcategory}/${state.productCode}`).catch(error => {
-                setModalLoading(false)
-                handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao seu comunicar com o servidor - ${error.message}` })
-            })
+        // VALIDAÇÃO SE UM PRODUTO COM O MESMO CÓDIGO JÁ EXISTE
+        const res = await axios.get(`${baseUrl.backendApi}/product/get/${state.productSubcategory}/${state.productCode}`).catch(error => {
+            setModalLoading(false)
+            handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao seu comunicar com o servidor - ${error.message}` })
+        })
 
-            if (response.data.length > 0) {
-                setModalLoading(false)
-                handleAlert({ type: 'openAlert', title: 'Atenção', body: 'Já existe um produto cadastrado com o mesmo código' })
-                return
-            }
+        if (res.data.length > 0) {
+            setModalLoading(false)
+            handleAlert({ type: 'openAlert', title: 'Atenção', body: 'Já existe um produto cadastrado com o mesmo código' })
+            return
         }
 
+
         const payload = {
+            productKey: state.productKey,
             productCode: state.productCode,
             productDescription: state.productDescription,
             categoryKey: state.productCategory,
@@ -126,25 +124,43 @@ export default function Product() {
 
         const message = state.productUpdate ? 'Produto atualizado com sucesso!' : 'Produto criado com sucesso!'
 
-        if(response.status == 201){
+        if (response.status == 201) {
             setModalLoading(false)
-            handleAlert({type: 'openAlert', title: 'Sucesso', body: message})
+            handleAlert({ type: 'openAlert', title: 'Sucesso', body: message })
             handleClose()
-        }else{
+        } else {
             setModalLoading(false)
-            handleAlert({type: 'openAlert', title: 'Erro', body: 'Erro desconhecido'})
+            handleAlert({ type: 'openAlert', title: 'Erro', body: 'Erro desconhecido' })
         }
-        
-
     }
 
+    // DADOS QUE SÃO BUSCADOS DO BACKEND LOGO QUANDO A PÁGINA É RENDERIZADA
     useEffect(() => {
-
         handleGetCategories()
-
         handleGetSubcategories()
-
+        handleGetProducts()
     }, [])
+
+    // MONTA O COMPONENTE DE ITENS QUE SERÁ EXIBIDO NA TELA COM BASE NO STATE DE PRODUCTS
+    useEffect(() => {
+        setProductItems(products.map(product => {
+            return <ProductItem key={product.product_key} product={product} dispatch={dispatch} openModal={handleShow} />
+        }))
+    }, [products])
+
+    // DEPENDE DA CATEGORIA DO PRODUTO PARA BUSCAR AS SUBCATEGORIAS CORRESPONDENTES E MONTAR AS OPTIONS
+    useEffect(() => {
+        const availableSubcategories = subcategories.filter((subcategory) => {
+            if (state.productCategory == subcategory.category_key) {
+                return subcategory
+            }
+        }, state.productCategory)
+
+        const options = availableSubcategories.map(subcategory => {
+            return (<option key={subcategory.subcategory_key} value={subcategory.subcategory_key}>{subcategory.subcategory_description}</option>)
+        })
+        setSubcategoriesOptions(options)
+    }, [state.productCategory, subcategories])
 
 
     return (
@@ -155,7 +171,7 @@ export default function Product() {
             {/*
                 MODAL PARA CADASTRO DE PRODUTOS    
             */}
-            <Modal show={modalStatus} onHide={handleClose} size='lg'>
+            <Modal show={modalStatus} onHide={handleClose} size='lg' dialogClassName="product-modal">
                 <Modal.Header closeButton>
                     <Modal.Title>Cadastro de produtos</Modal.Title>
                 </Modal.Header>
@@ -236,7 +252,6 @@ export default function Product() {
                                     value={state.productCategory}
                                     onChange={e => {
                                         dispatch({ type: 'changeCategory', value: e.target.value })
-                                        changeSubcategories(e.target.value)
                                     }}
                                 >
                                     <option value="">Selecione uma categoria</option>
@@ -259,10 +274,10 @@ export default function Product() {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <ClipLoader loading={modalLoading} color={'#000'} size={30}/>
-                    <Button variant="primary" onClick={handleSaveProduct}>Salvar</Button>
-                    <Button variant="success" onClick={e => dispatch({ type: 'clearFields' })}>Limpar campos</Button>
-                    <Button variant="secondary" onClick={handleClose}>Fechar</Button>
+                    <ClipLoader loading={modalLoading} color={'#000'} size={30} />
+                    <Button onClick={handleSaveProduct}>Salvar</Button>
+                    <Button onClick={e => dispatch({ type: 'clearFields' })}>Limpar campos</Button>
+                    <Button onClick={handleClose}>Fechar</Button>
                 </Modal.Footer>
             </Modal>
             {/*
@@ -274,16 +289,7 @@ export default function Product() {
             </div>
 
             <div className="products-list">
-                <ProductItem />
-                <ProductItem />
-                <ProductItem />
-                <ProductItem />
-                <ProductItem />
-                <ProductItem />
-                <ProductItem />
-                <ProductItem />
-                <ProductItem />
-                <ProductItem />
+                {productItems}
             </div>
         </div>
     )
