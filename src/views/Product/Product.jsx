@@ -224,7 +224,7 @@ export default function Product() {
 
         if (filter.productCode != '') {
             filteredProducts = filteredProducts.filter(product => {
-                if (product.product_code == filter.productCode) {
+                if (product.product_code.includes(filter.productCode)) {
                     return product
                 }
             })
@@ -250,7 +250,7 @@ export default function Product() {
             return <ProductItem key={product.product_key} product={product} dispatch={dispatch} openModal={handleShow} handleAlert={handleAlert} setUpdate={setUpdate} />
         }))
 
-    }, [filter])
+    }, [filter, products])
 
 
     return (
