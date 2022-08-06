@@ -1,14 +1,27 @@
 @import '../../configs/Colors.scss';
 .Product{
-    .buttons{
+    .header{
         display: flex;
         gap: 10px;
         
         button{
             background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            width: 40%;
+            text-align: center;
             padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;  
+            border: 1px solid $thirdColor;
+            background: $thirdColor;
+            color: $primaryColor;
+            border-radius: 20px;
+            cursor: pointer;
+
+            &:hover{
+                background: $hoverColor;
+            }
         }
     }
 

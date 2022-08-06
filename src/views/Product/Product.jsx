@@ -10,7 +10,10 @@ import Alert from '../../components/Alert/Alert';
 import { innitialAlert, alertReducer } from '../../reducers/alertModal/alertModal';
 import { ClipLoader } from 'react-spinners';
 import ProductItem from '../../components/ProductItem/ProducItem';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { filterReducer, innitialFilter } from '../../reducers/ProductFilter/ProductFilter';
+import SkeletonLoader from '../../components/ContentLoader/SkeletonLoader';
 
 export default function Product() {
 
@@ -28,11 +31,19 @@ export default function Product() {
 
     const [subcategoriesOptions, setSubcategoriesOptions] = useState([])
 
+    const [filterCategories, setFilterCategories] = useState([])
+
+    const [filterSubcategories, setFilterSubcategories] = useState([])
+
     const [modalLoading, setModalLoading] = useState(false)
 
     const [state, dispatch] = useReducer(reducer, innitialState)
 
     const [alert, handleAlert] = useReducer(alertReducer, innitialAlert)
+
+    const [filter, handleFilter] = useReducer(filterReducer, innitialFilter)
+
+    const [loading, setLoading] = useState(false)
 
     // FECHA O MODAL DE CADASTRO DE PRODUTOS
     const handleClose = () => {
@@ -56,15 +67,24 @@ export default function Product() {
                 <option key={category.category_key} value={category.category_key}>{category.category_description}</option>
             )
         }))
+
+        setFilterCategories(res.data.map(category => {
+            return (
+                <option key={category.category_key} value={category.category_key}>{category.category_description}</option>
+            )
+        }))
     }
 
     const handleGetProducts = async () => {
+        setLoading(true)
         const res = await axios.get(`${baseUrl.backendApi}/product/get`)
             .catch(error => {
                 handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao seu comunicar com o servidor - ${error.message}` })
             })
 
         setProducts(res.data)
+
+        setLoading(false)
     }
 
     // BUSCA AS SUBCATEGORIAS
@@ -161,6 +181,57 @@ export default function Product() {
         })
         setSubcategoriesOptions(options)
     }, [state.productCategory, subcategories])
+
+    useEffect(() => {
+        const availableSubcategories = subcategories.filter((subcategory) => {
+            if (filter.productCategory == subcategory.category_key) {
+                return subcategory
+            }
+        }, filter.productCategory)
+
+        const options = availableSubcategories.map(subcategory => {
+            return (<option key={subcategory.subcategory_key} value={subcategory.subcategory_key}>{subcategory.subcategory_description}</option>)
+        })
+
+        setFilterSubcategories(options)
+    }, [filter.productCategory, subcategories])
+
+    useEffect(() => {
+
+        let filteredProducts = products
+
+
+        if(filter.productCode != ''){
+
+            filteredProducts = filteredProducts.filter(product => {
+                
+                if(product.product_code == filter.productCode){ 
+                    return product
+                }
+            })
+        }
+
+        if(filter.productCategory != ''){
+            filteredProducts = filteredProducts.filter(product => {
+                if(product.category_key == filter.productCategory){
+                    return product
+                }
+            })
+        }
+
+        if(filter.productSubcategory != ''){
+            filteredProducts = filteredProducts.filter(product => {
+                if(product.subcategory_key == filter.productSubcategory){
+                    return product
+                }
+            })
+        }
+
+        setProductItems(filteredProducts.map(product => {
+            return <ProductItem key={product.product_key} product={product} dispatch={dispatch} openModal={handleShow} />
+        }))
+
+    }, [filter])
 
 
     return (
@@ -284,13 +355,38 @@ export default function Product() {
                 FIM DO MODAL PARA CADASTRO DE PRODUTOS    
             */}
 
-            <div className="buttons">
-                <button onClick={handleShow}>Novo produto</button>
+            <div className="header">
+                <button onClick={handleShow}><FontAwesomeIcon icon={faPlus} /><span>Novo produto</span></button>
+
+                <Form.Control
+                    type="text"
+                    placeholder="Código do produto"
+                    value={filter.productCode}
+                    onChange={e => handleFilter({ type: 'changeProductCode', value: e.target.value })} />
+
+                <Form.Select
+                    value={filter.productCategory}
+                    onChange={e => {
+                        handleFilter({ type: 'changeProductCategory', value: e.target.value })
+                    }}>
+                    <option value="">Selecione uma categoria</option>
+                    {filterCategories}
+                </Form.Select>
+
+                <Form.Select
+                    value={filter.productSubcategory}
+                    onChange={e => handleFilter({ type: 'changeProductSubcategory', value: e.target.value })}
+                >
+                    <option value="" >Selecione uma subcategoria</option>
+                    {filterSubcategories}
+                </Form.Select>
             </div>
 
-            <div className="products-list">
+            {loading ? <SkeletonLoader /> : ''}
+            
+            {!loading ? <div className="products-list">
                 {productItems}
-            </div>
+            </div> : ''}
         </div>
     )
 }

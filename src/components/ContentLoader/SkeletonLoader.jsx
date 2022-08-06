@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react'
 import ContentLoader from 'react-content-loader'
 
-const RepeatableTableRows = props => {
-  const { rows = 5 } = props
+export default  function SkeletonLoader (props)  {
+  const { rows = 10 } = props
   const rowHeight = 60
 
   return (
@@ -60,12 +60,3 @@ const RepeatableTableRows = props => {
     </ContentLoader>
   )
 }
-RepeatableTableRows.metadata = {
-  name: 'Lukas Werner',
-  github: 'sherpaPSX',
-  description:
-    'Repeatable table rows. You can easily define number of rows in props and generate then in one svg',
-  filename: 'RepeatableTableRows',
-}
-
-export default RepeatableTableRows
