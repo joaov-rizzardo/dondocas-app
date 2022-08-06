@@ -1,8 +1,15 @@
+import { useReducer } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBan, faPenToSquare, faShirt, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faBan, faCheck, faPenToSquare, faShirt, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { confirmReducer, innitialConfirm } from '../../reducers/ConfirmModal/ConfirmModal'
 import './ProductItem.scss'
+import Confirm from '../Confirm/Confirm'
+import baseUrl from '../../configs/Url'
+import axios from 'axios'
 
 export default function ProductItem(props) {
+
+    const [confirm, handleConfirm] = useReducer(confirmReducer, innitialConfirm)
 
     const handleUpdateProduct = () => {
 
@@ -21,8 +28,48 @@ export default function ProductItem(props) {
         props.openModal()
     }
 
+    const handleChangeProductStatus = async () => {
+
+        const productStatus = props.product.product_status == 'A' ? 'I' : 'A'
+
+        handleConfirm({type: 'setLoading', loading: true})
+
+        const response = await axios.put(`${baseUrl.backendApi}/product/change/status`, {
+            productKey : props.product.product_key,
+            productStatus: productStatus
+        }).catch(error => {
+            handleConfirm({type: 'closeConfirm'})
+            props.handleAlert({type: 'openAlert', title: 'Erro', body: `Não foi possível se comunicar com o servidor - ${error.message}`})
+        })
+
+        if(response){
+            handleConfirm({type: 'closeConfirm'})
+            const status = productStatus == 'A' ? 'ativado' : 'inativado'
+            props.handleAlert({type: 'openAlert', title: 'Sucesso', body: `O produto foi ${status} com sucesso`})
+            props.setUpdate(true)
+        }
+    }
+
+    const handleDeleteProduct = async () => {
+        handleConfirm({type: 'setLoading', loading: true})
+
+        const response = await axios.delete(`${baseUrl.backendApi}/product/delete/${props.product.product_key}`).catch(error => {
+            handleConfirm({type: 'closeConfirm'})
+            props.handleAlert({type: 'openAlert', title: 'Erro', body: `Não foi possível se comunicar com o servidor - ${error.message}`})
+        })
+
+        if(response){
+            handleConfirm({type: 'closeConfirm'})
+            props.handleAlert({type: 'openAlert', title: 'Sucesso', body: 'O produto foi excluído com sucesso'})
+            props.setUpdate(true)
+        }
+    }
+
     return (
         <div className="ProductItem">
+
+            <Confirm confirm={confirm} handleConfirm={handleConfirm}/>
+
             <div className="icon">
                 <FontAwesomeIcon icon={faShirt} />
             </div>
@@ -50,24 +97,29 @@ export default function ProductItem(props) {
 
                 <div className="item">
                     <span className="title">Valor de compra</span>
-                    <span>{props.product.product_purchase_value}</span>
+                    <span>R$ {props.product.product_purchase_value}</span>
                 </div>
 
                 <div className="item">
-                    <span className="title">Valor de venda (a vista)</span>
-                    <span>{props.product.product_cash_payment_value}</span>
+                    <span className="title">Preço a vista</span>
+                    <span>R$ {props.product.product_cash_payment_value}</span>
                 </div>
 
                 <div className="item">
-                    <span className="title">Valor de venda (a prazo)</span>
-                    <span>{props.product.product_deferred_payment_value}</span>
+                    <span className="title">Preço a prazo</span>
+                    <span>R$ {props.product.product_deferred_payment_value}</span>
                 </div>
             </div>
 
             <div className="product-buttons">
                 <button onClick={handleUpdateProduct} title="Editar"><FontAwesomeIcon icon={faPenToSquare} /></button>
-                <button title="Inativar"><FontAwesomeIcon icon={faBan} /></button>
-                <button title="Excluir"><FontAwesomeIcon icon={faTrash} /></button>
+                <button onClick={() => {
+                    const action =  props.product.product_status == 'A' ? 'inativar' : 'ativar'
+                    handleConfirm({type: 'openConfirm', title: 'Atenção', body: `Tem certeza que deseja ${action} o produto?`, callback: handleChangeProductStatus}) 
+                }
+
+                } title={props.product.product_status == 'A' ? 'Inativar' : 'Ativar'}><FontAwesomeIcon icon={props.product.product_status == 'A' ? faBan : faCheck} /></button>
+                <button onClick={() => handleConfirm({type: 'openConfirm', title: 'Atenção', body: 'Tem certeza que deseja excluir o produto? Essa ação é irreversível!', callback: handleDeleteProduct})} title="Excluir"><FontAwesomeIcon icon={faTrash} /></button>
             </div>
         </div>
     )

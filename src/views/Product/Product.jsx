@@ -17,7 +17,13 @@ import SkeletonLoader from '../../components/ContentLoader/SkeletonLoader';
 
 export default function Product() {
 
+    //----------------------------------------------------------------------------------------
+    //                                  STATES E REDUCERS
+    //----------------------------------------------------------------------------------------
+
     const [modalStatus, setModalStatus] = useState(false)
+
+    const [update, setUpdate] = useState(true)
 
     const [categories, setCategories] = useState([])
 
@@ -37,29 +43,60 @@ export default function Product() {
 
     const [modalLoading, setModalLoading] = useState(false)
 
+    const [loading, setLoading] = useState(false)
+
     const [state, dispatch] = useReducer(reducer, innitialState)
 
     const [alert, handleAlert] = useReducer(alertReducer, innitialAlert)
 
     const [filter, handleFilter] = useReducer(filterReducer, innitialFilter)
 
-    const [loading, setLoading] = useState(false)
+    //----------------------------------------------------------------------------------------
+    //                                  FUNCTIONS
+    //----------------------------------------------------------------------------------------
 
     // FECHA O MODAL DE CADASTRO DE PRODUTOS
     const handleClose = () => {
         dispatch({ type: 'clearFields' })
         setModalStatus(false)
     }
-
     // ABRE O MODAL DE CADASTRO DE PRODUTOS
     const handleShow = () => {
         setModalStatus(true)
     }
+    
+    // REALIZA A BUSCA DOS PRODUTOS CADASTRADOS
+    useEffect(() => {
+        setUpdate(false)
+        handleGetProducts()
+    }, [update == true])
 
-    // BUSCAS AS CATEGORIAS E MONTA AS OPTIONS
+    const handleGetProducts = async () => {
+        setLoading(true)
+        const res = await axios.get(`${baseUrl.backendApi}/product/get`)
+            .catch(error => {
+                handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao seu comunicar com o servidor - ${error.message}` })
+            })
+
+        setProducts(res.data)
+
+        setLoading(false)
+    }
+
+    // REALIZA AS BUSCAS DAS CATEGORIAS E SUBCATEGORIAS CADASTRADAS NO BACKEND
+    useEffect(() => {
+        handleGetCategories()
+        handleGetSubcategories()
+    }, [])
+    
+    const handleGetSubcategories = async () => {
+        const res = await axios.get(`${baseUrl.backendApi}/subcategory/get`)
+        setSubcategories(res.data)
+    }
+
     const handleGetCategories = async () => {
         const res = await axios.get(`${baseUrl.backendApi}/category/get`)
-
+        
         setCategories(res.data)
 
         setCategoriesOptions(res.data.map(category => {
@@ -75,26 +112,8 @@ export default function Product() {
         }))
     }
 
-    const handleGetProducts = async () => {
-        setLoading(true)
-        const res = await axios.get(`${baseUrl.backendApi}/product/get`)
-            .catch(error => {
-                handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao seu comunicar com o servidor - ${error.message}` })
-            })
 
-        setProducts(res.data)
-
-        setLoading(false)
-    }
-
-    // BUSCA AS SUBCATEGORIAS
-    const handleGetSubcategories = async () => {
-
-        const res = await axios.get(`${baseUrl.backendApi}/subcategory/get`)
-
-        setSubcategories(res.data)
-    }
-
+    // FUNÇÃO RESPONSÁVEL POR CRIAR E ATUALZIAR PRODUTOS
     const handleSaveProduct = async () => {
 
         setModalLoading(true)
@@ -117,12 +136,12 @@ export default function Product() {
             handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao seu comunicar com o servidor - ${error.message}` })
         })
 
-        if (res.data.length > 0) {
+        if (res.data.length > 0 && res.data[0].product_key != state.productKey) {
             setModalLoading(false)
+            console.log(res.data)
             handleAlert({ type: 'openAlert', title: 'Atenção', body: 'Já existe um produto cadastrado com o mesmo código' })
             return
         }
-
 
         const payload = {
             productKey: state.productKey,
@@ -148,23 +167,17 @@ export default function Product() {
             setModalLoading(false)
             handleAlert({ type: 'openAlert', title: 'Sucesso', body: message })
             handleClose()
+            setUpdate(true)
         } else {
             setModalLoading(false)
             handleAlert({ type: 'openAlert', title: 'Erro', body: 'Erro desconhecido' })
         }
     }
 
-    // DADOS QUE SÃO BUSCADOS DO BACKEND LOGO QUANDO A PÁGINA É RENDERIZADA
-    useEffect(() => {
-        handleGetCategories()
-        handleGetSubcategories()
-        handleGetProducts()
-    }, [])
-
     // MONTA O COMPONENTE DE ITENS QUE SERÁ EXIBIDO NA TELA COM BASE NO STATE DE PRODUCTS
     useEffect(() => {
         setProductItems(products.map(product => {
-            return <ProductItem key={product.product_key} product={product} dispatch={dispatch} openModal={handleShow} />
+            return <ProductItem key={product.product_key} product={product} dispatch={dispatch} openModal={handleShow} handleAlert={handleAlert} setUpdate={setUpdate}  />
         }))
     }, [products])
 
@@ -182,7 +195,13 @@ export default function Product() {
         setSubcategoriesOptions(options)
     }, [state.productCategory, subcategories])
 
+
+    // DEFINE AS OPÇÕES DE SUBCATEGORIA PARA O CAMPO DE FILTRO
     useEffect(() => {
+
+        // DEFINE COMO VAZIO O CAMPO DE SUBCATEGORIA SEMPRE QUE HOUVER ALTERAÇÃO NA CATEGORIA
+        handleFilter({ type: 'changeProductSubcategory', value: '' })
+
         const availableSubcategories = subcategories.filter((subcategory) => {
             if (filter.productCategory == subcategory.category_key) {
                 return subcategory
@@ -196,39 +215,39 @@ export default function Product() {
         setFilterSubcategories(options)
     }, [filter.productCategory, subcategories])
 
+
+
+    // REALIZA O FILTRO DOS PRODUTOS EXIBIDOS NA TELA SEMPRE QUE HOUVER ALTERAÇÃO NO REDUCER DE FILTRO
     useEffect(() => {
 
         let filteredProducts = products
 
-
-        if(filter.productCode != ''){
-
+        if (filter.productCode != '') {
             filteredProducts = filteredProducts.filter(product => {
-                
-                if(product.product_code == filter.productCode){ 
+                if (product.product_code == filter.productCode) {
                     return product
                 }
             })
         }
 
-        if(filter.productCategory != ''){
+        if (filter.productCategory != '') {
             filteredProducts = filteredProducts.filter(product => {
-                if(product.category_key == filter.productCategory){
+                if (product.category_key == filter.productCategory) {
                     return product
                 }
             })
         }
 
-        if(filter.productSubcategory != ''){
+        if (filter.productSubcategory != '') {
             filteredProducts = filteredProducts.filter(product => {
-                if(product.subcategory_key == filter.productSubcategory){
+                if (product.subcategory_key == filter.productSubcategory) {
                     return product
                 }
             })
         }
 
         setProductItems(filteredProducts.map(product => {
-            return <ProductItem key={product.product_key} product={product} dispatch={dispatch} openModal={handleShow} />
+            return <ProductItem key={product.product_key} product={product} dispatch={dispatch} openModal={handleShow} handleAlert={handleAlert} setUpdate={setUpdate} />
         }))
 
     }, [filter])
@@ -383,10 +402,11 @@ export default function Product() {
             </div>
 
             {loading ? <SkeletonLoader /> : ''}
-            
+
             {!loading ? <div className="products-list">
                 {productItems}
             </div> : ''}
+
         </div>
     )
 }
