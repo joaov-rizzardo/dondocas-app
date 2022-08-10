@@ -1,0 +1,96 @@
+@import '../../configs/Colors.scss';
+
+.SaleModal{
+    .modal-body{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: space-between;
+        gap: 20px;
+
+        fieldset{
+            border-radius: 10px;
+
+            legend{
+                background: $thirdColor;
+                color: $primaryColor;
+                padding: 5px;
+                border-radius: 5px;
+            }
+
+            input.form-check-input{
+                height: 24px;
+                width: 48px;
+
+                &:checked{
+                    background-color: $thirdColor;
+                }
+            }
+        }
+
+        .flex-group{
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 10px;
+            justify-content: space-around;
+        }
+
+        table.table-items{
+            width: 100%;
+            border-radius: 10px;
+            padding: 10px;
+
+            tr{
+
+                th{
+                    color: $thirdColor;
+                }
+                td,th{
+                    padding: 10px;
+                    text-align: center;
+
+                    button{
+                        background: none;
+                        border: none;
+                        color: $thirdColor;
+                        font-size: 1.2em;
+
+                        &.add-product{
+                            background:  $thirdColor;
+                            color: $primaryColor;
+                            padding: 5px;
+                            border-radius: 50%;
+                            width: 2em;
+                            height: 2em;
+                        }
+                    }
+                }
+                
+
+                border-bottom: 1px solid $thirdColor;
+                background: $secondaryColor;
+            }
+        }
+    }
+
+    .modal-footer{
+        display: flex;
+        justify-content: space-between;
+
+        div.total-sale{
+            h3{
+                color: $thirdColor;
+            }
+        }
+        div.buttons{
+            display: flex;
+            gap: 10px;
+
+            button{
+                color: $primaryColor;
+                background: $thirdColor;
+                border: none;
+            }
+        }
+    }
+}
