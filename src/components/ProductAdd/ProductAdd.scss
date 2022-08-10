@@ -1,0 +1,70 @@
+@import '../../configs/Colors.scss';
+
+.ProductAdd {
+    border: 5px solid $thirdColor;
+    border-radius: 10px;
+
+    .modal-body {
+        .find {
+            display: grid;
+            grid-template-columns: 0.5fr 1fr 1fr 0.2fr;
+            gap: 5px;
+            justify-content: space-between;
+            align-items: center;
+
+
+            button {
+                position: relative;
+                top: 5px;
+                width: 38px;
+                padding: 5px;
+                height: 38px;
+                border-radius: 50%;
+                background: $thirdColor;
+                border: none;
+                color: $primaryColor;
+            }
+
+        }
+
+        .product {
+
+            table {
+                width: 100%;
+                border-radius: 10px;
+                padding: 10px;
+
+                tr {
+                    border-bottom: 1px solid $thirdColor;
+                    background: $secondaryColor;
+
+                    th {
+                        color: $thirdColor;
+                    }
+
+                    td,
+                    th {
+                        padding: 10px;
+                        text-align: center;
+                    }
+                }
+            }
+
+        }
+    }
+
+
+    .modal-footer {
+        .buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            button {
+                background: $thirdColor;
+                border: none;
+                color: $primaryColor;
+            }
+        }
+    }
+}
