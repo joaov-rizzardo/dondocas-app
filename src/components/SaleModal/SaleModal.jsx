@@ -23,7 +23,7 @@ export default function SaleModal(props) {
             <ProductAdd handleClose={handleCloseAddProduct} show={addProductStatus} />
 
             <Modal show={props.modalStatus} onHide={props.handleClose} size='xl' dialogClassName="SaleModal">
-                <Modal.Body closeButton>
+                <Modal.Body>
                     <fieldset>
                         <legend>Dados do cliente</legend>
                         <div className="flex-group">
