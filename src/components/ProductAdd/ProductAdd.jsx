@@ -29,7 +29,7 @@ export default function ProductAdd(props) {
 
     const handleGetCategories = async () => {
         const categoryResponse = await axios.get(`${baseUrl.backendApi}/category/get`)
-            .catch(error => handleAlert({type:'openAlert', title: 'Erro', body: `Erro ao se comunicar com o servidor - ${error.message}`}))
+            .catch(error => handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao se comunicar com o servidor - ${error.message}` }))
 
         setCategories(categoryResponse.data)
     }
@@ -37,7 +37,7 @@ export default function ProductAdd(props) {
     const handleGetSubcategories = async () => {
 
         const subcategoryResponse = await axios.get(`${baseUrl.backendApi}/subcategory/get`)
-            .catch(error => handleAlert({type:'openAlert', title: 'Erro', body: `Erro ao se comunicar com o servidor - ${error.message}`}))
+            .catch(error => handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao se comunicar com o servidor - ${error.message}` }))
 
         setSubcategories(subcategoryResponse.data)
 
@@ -55,19 +55,19 @@ export default function ProductAdd(props) {
         setLoading(true)
         if (find.product_code == '' || find.subcategory_key == '') {
             setLoading(false)
-            handleAlert({type:'openAlert', title: 'Atenção', body: 'Preencha todos os campos para realizar a busca'})
+            handleAlert({ type: 'openAlert', title: 'Atenção', body: 'Preencha todos os campos para realizar a busca' })
             return
         }
 
         const response = await axios.get(`${baseUrl.backendApi}/product/get/${find.subcategory_key}/${find.product_code}`)
             .catch(error => {
                 setLoading(false)
-                handleAlert({type:'openAlert', title: 'Erro', body: `Erro ao se comunicar com o servidor - ${error.message}`})
+                handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao se comunicar com o servidor - ${error.message}` })
             })
 
         if (response.data.length == 0) {
             setLoading(false)
-            handleAlert({type:'openAlert', title: 'Atenção', body: 'Nenhum produto foi encontrado para essas especificações'})
+            handleAlert({ type: 'openAlert', title: 'Atenção', body: 'Nenhum produto foi encontrado para essas especificações' })
             return
         }
 
@@ -79,18 +79,42 @@ export default function ProductAdd(props) {
     }
 
     const handleAddProduct = () => {
-        for(let product of products){
-            props.handleSale({type: 'addProduct', product})
+
+        if(products.length == 0){
+            handleAlert({ type: 'openAlert', title: 'Atenção', body: `Nenhum produto para ser inserido` })
+            return false
+        }
+
+        let stopCondition = false
+
+        for (let product of products) {
+            const productExists = props.saleProducts.find(saleProduct => {
+                if (saleProduct.product_key == product.product_key) {
+                    return saleProduct
+                }
+            })
+
+            if (productExists) {
+                stopCondition = true
+                handleAlert({ type: 'openAlert', title: 'Atenção', body: `O produto ${product.product_description} já foi inserido na venda` })
+                continue
+            }
+
+            props.handleSale({ type: 'addProduct', product })
+        }
+
+        if (stopCondition) {
+            return false
         }
 
         setProducts([])
-        
-        handleAlert({type: 'openAlert', title: 'Sucesso', body: 'O produto foi adicionado com sucesso na venda'})
+
+        handleAlert({ type: 'openAlert', title: 'Sucesso', body: 'O produto foi adicionado com sucesso na venda' })
     }
 
     return (
         <>
-            <Alert args={alert} closeAlert={handleAlert}/>
+            <Alert args={alert} closeAlert={handleAlert} />
             <Modal show={props.show} onHide={props.handleClose} size='lg' dialogClassName="ProductAdd">
 
                 <Modal.Header closeButton>
