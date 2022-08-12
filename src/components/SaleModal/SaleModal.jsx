@@ -5,7 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import './SaleModal.scss'
 import ProductAdd from '../ProductAdd/ProductAdd';
-import { useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
+import { innitialSale, saleReducer } from '../../reducers/Sale/Sale';
+import axios from 'axios';
+import baseUrl from '../../configs/Url';
+import Alert from '../Alert/Alert';
+import { alertReducer, innitialAlert } from '../../reducers/alertModal/alertModal';
 
 export default function SaleModal(props) {
 
@@ -18,9 +23,30 @@ export default function SaleModal(props) {
     const handleOpenAddProduct = () => {
         setAddProductStatus(true)
     }
+
+    const [sale, handleSale] = useReducer(saleReducer, innitialSale)
+
+    const [paymentForms, setPaymentForms] = useState([])
+
+    const handleGetPaymentForms = async () => {
+        const response = await axios.get(`${baseUrl.backendApi}/payment/get`)
+        .catch(error => handleAlert({type: 'openAlert', title: 'Erro', body: `Erro ao se comunicar com o servidor - ${error.message}`}))
+
+        setPaymentForms(response.data)
+    }
+
+    useEffect(() => {
+        handleGetPaymentForms()
+    }, [])
+
+    const [alert, handleAlert] = useReducer(alertReducer, innitialAlert)
+
     return (
         <>
-            <ProductAdd handleClose={handleCloseAddProduct} show={addProductStatus} />
+
+            <Alert args={alert} closeAlert={handleAlert} />
+
+            <ProductAdd handleSale={handleSale} handleClose={handleCloseAddProduct} show={addProductStatus} />
 
             <Modal show={props.modalStatus} onHide={props.handleClose} size='xl' dialogClassName="SaleModal">
                 <Modal.Body>
@@ -56,6 +82,9 @@ export default function SaleModal(props) {
                             <Form.Label>Forma de pagamento</Form.Label>
                             <Form.Select>
                                 <option value="">Selecione uma forma de pagamento</option>
+                                {paymentForms.map(form => {
+                                    return (<option key={form.payment_key} value={form.payment_key}>{form.payment_description}</option>)
+                                })}
                             </Form.Select>
                         </Form.Group>
                     </fieldset>
@@ -76,17 +105,19 @@ export default function SaleModal(props) {
                             </thead>
 
                             <tbody>
-
-                                <tr>
-                                    <td>01</td>
-                                    <td>Sapatilha teste</td>
-                                    <td>37</td>
-                                    <td>Vermelho</td>
-                                    <td><input step="1" type="number" /></td>
-                                    <td>R$ 23,50</td>
-                                    <td><button><FontAwesomeIcon icon={faTrash} /></button></td>
-                                </tr>
-
+                                {sale.products.map(product => {
+                                    return (
+                                        <tr key={product.product_key}>
+                                            <td>{product.product_code}</td>
+                                            <td>{product.product_description}</td>
+                                            <td>37</td>
+                                            <td>Vermelho</td>
+                                            <td><input step="1" type="number" value={product.quantity} onChange={e => handleSale({type: 'changeQuantity', product_key: product.product_key, quantity: e.target.value})}/></td>
+                                            <td>R$ {product.product_cash_payment_value}</td>
+                                            <td><button><FontAwesomeIcon icon={faTrash} /></button></td>
+                                        </tr>
+                                    )
+                                })}
                             </tbody>
                         </table>
                     </fieldset>
