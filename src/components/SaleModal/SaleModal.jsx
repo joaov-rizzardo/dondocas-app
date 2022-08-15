@@ -11,8 +11,14 @@ import axios from 'axios';
 import baseUrl from '../../configs/Url';
 import Alert from '../Alert/Alert';
 import { alertReducer, innitialAlert } from '../../reducers/alertModal/alertModal';
+import Confirm from '../Confirm/Confirm';
+import { confirmReducer, innitialConfirm } from '../../reducers/ConfirmModal/ConfirmModal';
 
 export default function SaleModal(props) {
+
+    const [alert, handleAlert] = useReducer(alertReducer, innitialAlert)
+
+    const [confirm, handleConfirm] = useReducer(confirmReducer, innitialConfirm)
 
     const [addProductStatus, setAddProductStatus] = useState(false)
 
@@ -25,6 +31,10 @@ export default function SaleModal(props) {
     }
 
     const [sale, handleSale] = useReducer(saleReducer, innitialSale)
+
+    //----------------------------------------------------------------------------------------------------
+    //                             FUNÇÕES PARA BUSCAR AS FORMAS DE PAGAMENTO
+    //----------------------------------------------------------------------------------------------------
 
     const [paymentForms, setPaymentForms] = useState([])
 
@@ -41,21 +51,138 @@ export default function SaleModal(props) {
 
     const handleChangePaymentForm = payment_key => {
 
-        const paymentForm = paymentForms.find(form => {
-            if (form.payment_key == payment_key) {
-                return form
-            }
-        })
+        let paymentForm = {}
 
-        handleSale({type: 'changePaymentForm', form: paymentForm})
+        if (payment_key == '') {
+            paymentForm = {
+                payment_key: '',
+                payment_type: 'V',
+                payment_discount_percent: 0
+            }
+        } else {
+            paymentForm = paymentForms.find(form => {
+                if (form.payment_key == payment_key) {
+                    return form
+                }
+            })
+        }
+
+        handleSale({ type: 'changePaymentForm', form: paymentForm })
     }
 
-    const [alert, handleAlert] = useReducer(alertReducer, innitialAlert)
 
+    //----------------------------------------------------------------------------------------------------
+    //                                  FUNÇÕES PARA BUSCAR AS CORES
+    //----------------------------------------------------------------------------------------------------
+
+    const [colors, setColors] = useState([])
+
+    const handleGetColors = async () => {
+        const response = await axios.get(`${baseUrl.backendApi}/colors/get`)
+            .catch(error => handleAlert({ type: 'openAlert', title: 'Error', body: `Erro ao se comunicar com o servidor - ${error.message}` }))
+
+        setColors(response.data)
+    }
+
+    useEffect(() => {
+        handleGetColors()
+    }, [])
+
+    //----------------------------------------------------------------------------------------------------
+    //                                  FUNÇÕES PARA BUSCAR OS TAMANHOS
+    //----------------------------------------------------------------------------------------------------
+
+    const [sizes, setSizes] = useState([])
+
+    const handleGetSizes = async () => {
+        const response = await axios.get(`${baseUrl.backendApi}/sizes/get`)
+            .catch(error => handleAlert({ type: 'openAlert', title: 'Error', body: `Erro ao se comunicar com o servidor - ${error.message}` }))
+
+        setSizes(response.data)
+    }
+
+    useEffect(() => {
+        handleGetSizes()
+    }, [])
+
+    // FUNÇÃO PARA REMOVER PRODUTO DA VENDA
+    const handleRemoveProduct = product_key => {
+        handleConfirm({type: 'openConfirm', title: 'Atenção', body: 'Tem certeza que deseja remover o produto da venda?', callback: () => {
+            handleSale({type: 'removeProduct', product_key: product_key})
+            handleConfirm({type: 'closeConfirm'})
+        }})
+    }
+
+    // FUNÇÃO PARA EFETIVAR A VENDAS
+    const handleCreateSale = () => {
+
+        // REALIZANDO AS VALIDAÇÕES NECESSÁRIAS
+
+        // VALIDAÇÃO DOS DADOS DE CLIENTE
+        if (!sale.client.unidentified) {
+            if (sale.client.client_name == '') {
+                handleAlert({ type: 'openAlert', title: 'Atenção', body: 'Necessário preencher o nome do cliente caso possua identificação' })
+                return false
+            }
+        }
+
+        // VALIDAÇÃO DOS DADOS DE PAGAMENTO
+        if (sale.payment_form.payment_key == '') {
+            handleAlert({ type: 'openAlert', title: 'Atenção', body: 'Nenhuma forma de pagamento foi selecionada' })
+            return false
+        }
+
+        // VALIDAÇÃO DOS PRODUTOS
+        if (sale.products.length == 0) {
+            handleAlert({ type: 'openAlert', title: 'Atenção', body: 'Nenhuma produto foi adicionado na venda' })
+            return false
+        }
+
+        let stopCondition = false
+
+        for (let product of sale.products) {
+
+            // VERIFICA AS QUANTIDADES DO PRODUTO
+            if (product.quantity == 0 || product.quantity == '') {
+                handleAlert({ type: 'openAlert', title: 'Atenção', body: `O produto ${product.product_description} possuí quantidade igual a zero, ou vazia` })
+                stopCondition = true
+                break
+            }
+
+            // VERIFICA O VALOR DO PRODUTO
+            if (product.amount == 0 || product.amount == '') {
+                handleAlert({ type: 'openAlert', title: 'Atenção', body: `O produto ${product.product_description} possuí valor igual a zero` })
+                stopCondition = true
+                break
+            }
+
+            // VERIFICA SE FOI PREENCHIDO O TAMANHO DO PRODUTO
+            if (product.size == '') {
+                handleAlert({ type: 'openAlert', title: 'Atenção', body: `Informe o tamanho do produto ${product.product_description}` })
+                stopCondition = true
+                break
+            }
+
+            // VERIFICA SE FOI PREENCHIDO O TAMANHO DO PRODUTO
+            if (product.color == '') {
+                handleAlert({ type: 'openAlert', title: 'Atenção', body: `Informe a cor do produto ${product.product_description}` })
+                stopCondition = true
+                break
+            }
+        }
+
+        // SE CAIR EM ALGUMA DAS VALIDAÇÕES DO LAÇO, INTERROMPE A EXECUÇÃO DO PROCESSO
+        if (stopCondition) {
+            return false
+        }
+
+    }
 
     return (
         <>
             <Alert args={alert} closeAlert={handleAlert} />
+
+            <Confirm confirm={confirm} handleConfirm={handleConfirm}/>
 
             <ProductAdd saleProducts={sale.products} handleSale={handleSale} handleClose={handleCloseAddProduct} show={addProductStatus} />
 
@@ -69,6 +196,9 @@ export default function SaleModal(props) {
                                 <Form.Control
                                     type="text"
                                     placeholder="Digite o nome"
+                                    value={sale.client.client_name}
+                                    onChange={e => handleSale({ type: 'changeClientName', value: e.target.value })}
+                                    disabled={sale.client.unidentified ? 'disabled' : ''}
                                 />
                             </Form.Group>
 
@@ -77,12 +207,18 @@ export default function SaleModal(props) {
                                 <Form.Control
                                     type="tel"
                                     placeholder="(99) 99999-9999"
+                                    value={sale.client.client_telephone}
+                                    onChange={e => handleSale({ type: 'changeClientTelephone', value: e.target.value })}
+                                    disabled={sale.client.unidentified ? 'disabled' : ''}
                                 />
                             </Form.Group>
 
                             <Form.Group className="mb-3">
                                 <Form.Label>Cliente não identificado</Form.Label>
-                                <Form.Check type="switch" />
+                                <Form.Check
+                                    type="switch"
+                                    value={sale.client.unidentified}
+                                    onChange={e => handleSale({ type: 'changeClientUnidentified', value: e.target.checked })} />
                             </Form.Group>
                         </div>
                     </fieldset>
@@ -94,7 +230,7 @@ export default function SaleModal(props) {
                             <Form.Select
                                 value={sale.payment_form.payment_key}
                                 onChange={e => { handleChangePaymentForm(e.target.value) }}>
-                                <option>Selecione uma forma de pagamento</option>
+                                <option value=''>Selecione uma forma de pagamento</option>
                                 {paymentForms.map(form => {
                                     return (<option key={form.payment_key} value={form.payment_key}>{form.payment_description}</option>)
                                 })}
@@ -123,9 +259,33 @@ export default function SaleModal(props) {
                                         <tr key={product.product_key}>
                                             <td>{product.product_code}</td>
                                             <td>{product.product_description}</td>
-                                            <td>37</td>
-                                            <td>Vermelho</td>
-                                            <td><input step="1" type="number" value={product.quantity} onChange={e => {
+                                            <td>
+                                                <Form.Select
+                                                    value={product.size}
+                                                    onChange={e => handleSale({ type: 'changeSize', product_key: product.product_key, size: e.target.value })}
+                                                >
+                                                    <option value="">Selecione um tamanho</option>
+                                                    {sizes.filter(size => {
+                                                        if (size.category_key == product.category_key) {
+                                                            return size
+                                                        }
+                                                    }).map(size => { return (<option key={size.size_key} value={size.size_key}>{size.size_description}</option>) })}
+                                                </Form.Select>
+                                            </td>
+                                            <td>
+                                                <Form.Select
+                                                    value={product.color}
+                                                    onChange={e => handleSale({ type: 'changeColor', color: e.target.value, product_key: product.product_key })}
+                                                >
+                                                    <option value="">Selecione uma cor</option>
+                                                    {colors.map(color => {
+                                                        return (<option key={color.color_key} value={color.color_ke}>
+                                                            {color.color_description}
+                                                        </option>)
+                                                    })}
+                                                </Form.Select >
+                                            </td>
+                                            <td><Form.Control step="1" type="number" value={product.quantity} onChange={e => {
                                                 if (e.target.value == '0') {
                                                     handleAlert({ type: 'openAlert', title: 'Atenção!', body: 'A quantidade de itens não pode ser igual a zero!' })
                                                 } else {
@@ -133,7 +293,7 @@ export default function SaleModal(props) {
                                                 }
                                             }} /></td>
                                             <td>R$ {product.amount}</td>
-                                            <td><button><FontAwesomeIcon icon={faTrash} /></button></td>
+                                            <td><button onClick={e => handleRemoveProduct(product.product_key)}><FontAwesomeIcon icon={faTrash} /></button></td>
                                         </tr>
                                     )
                                 })}
@@ -152,7 +312,7 @@ export default function SaleModal(props) {
                     </div>
 
                     <div className="buttons">
-                        <Button>Salvar</Button>
+                        <Button onClick={handleCreateSale}>Salvar</Button>
                         <Button onClick={props.handleClose}>Fechar</Button>
                     </div>
 

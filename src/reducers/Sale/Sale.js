@@ -1,8 +1,9 @@
-import { faLeftLong } from "@fortawesome/free-solid-svg-icons"
-
 export const innitialSale = {
-    client_name: '',
-    client_telephone: '',
+    client: {
+        client_name : '',
+        client_telephone: '',
+        unidentified: false
+    },
     payment_form: {
         payment_key : '',
         payment_type : 'V',
@@ -26,7 +27,9 @@ export const saleReducer = (state, action) => {
                         ...action.product,
                         quantity: 1,
                         unit_price:  unit_price,
-                        amount : unit_price
+                        amount : unit_price,
+                        color: '',
+                        size: ''
                     }
                 ]
             }
@@ -68,7 +71,84 @@ export const saleReducer = (state, action) => {
                 })
 
             }
+        break;
+
+        case 'changeColor':
+            return{
+                ...state,
+                products : state.products.map(product => {
+                    if(product.product_key == action.product_key){
+                        return {
+                            ...product,
+                            color: action.color
+                        }
+                    }else{
+                        return product
+                    }
+                })
+            }
 
         break;
+
+        case 'changeSize':
+            return{
+                ...state,
+                products : state.products.map(product => {
+                    if(product.product_key == action.product_key){
+                        return {
+                            ...product,
+                            size: action.size
+                        }
+                    }else{
+                        return product
+                    }
+                })
+            }
+
+        break;
+
+        case 'changeClientName':
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    client_name : action.value
+                }
+            }
+
+        break
+
+        case 'changeClientTelephone':
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    client_telephone : action.value
+                }
+            }
+
+        break
+
+        case 'changeClientUnidentified':
+            return {
+                ...state,
+                client: {
+                    ...state.client,
+                    unidentified : action.value
+                }
+            }
+
+        break
+
+        case 'removeProduct':
+            return {
+                ...state,
+                products: state.products.filter(product => {
+                    if(product.product_key != action.product_key){
+                        return product
+                    }
+                })
+            }
+        break
     }
 }

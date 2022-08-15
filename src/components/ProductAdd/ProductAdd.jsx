@@ -27,6 +27,10 @@ export default function ProductAdd(props) {
         subcategory_key: ''
     })
 
+
+    //==================================================================================================================
+    //                              FUNÇÕES PARA BUSCAR AS CATEGORIAS E SUBCATEGORIAS
+    //==================================================================================================================
     const handleGetCategories = async () => {
         const categoryResponse = await axios.get(`${baseUrl.backendApi}/category/get`)
             .catch(error => handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao se comunicar com o servidor - ${error.message}` }))
@@ -48,6 +52,11 @@ export default function ProductAdd(props) {
         handleGetSubcategories()
     }, [])
 
+
+    //==================================================================================================================
+    //                                      FUNÇÕES PARA BUSCAR OS PRODUTOS
+    //==================================================================================================================
+
     const [products, setProducts] = useState([])
 
     const handleFindProduct = async () => {
@@ -64,7 +73,9 @@ export default function ProductAdd(props) {
                 setLoading(false)
                 handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao se comunicar com o servidor - ${error.message}` })
             })
+        
 
+        // FLUXO SE NENHUM PRODUTO FOR ENCONTRADO
         if (response.data.length == 0) {
             setLoading(false)
             handleAlert({ type: 'openAlert', title: 'Atenção', body: 'Nenhum produto foi encontrado para essas especificações' })
@@ -78,8 +89,11 @@ export default function ProductAdd(props) {
         setProducts(response.data)
     }
 
+
+    // FUNÇÃO PARA ADICIONAR PRODUTOS NA VENDA
     const handleAddProduct = () => {
 
+        // FLUXO SE NÃO EXISTIR NENHUM PRODUTO PARA SER INSERIDO
         if(products.length == 0){
             handleAlert({ type: 'openAlert', title: 'Atenção', body: `Nenhum produto para ser inserido` })
             return false
@@ -87,22 +101,32 @@ export default function ProductAdd(props) {
 
         let stopCondition = false
 
+        // PERCORRE OS PRODUTOS RETORNADOS - TEORICAMENTE É PARA RETORNAR APENAS UM
         for (let product of products) {
+
+            // VERIFICA SE O PRODUTO JÁ FOI INSERIDO ANTERIORMENTE NA VENDA
             const productExists = props.saleProducts.find(saleProduct => {
                 if (saleProduct.product_key == product.product_key) {
                     return saleProduct
                 }
             })
-
+            
             if (productExists) {
                 stopCondition = true
                 handleAlert({ type: 'openAlert', title: 'Atenção', body: `O produto ${product.product_description} já foi inserido na venda` })
                 continue
             }
 
+            // VERIFICA SE O PRODUTO ESTÁ ATIVO PARA VENDAS
+            if(product.product_status != 'A'){
+                stopCondition = true
+                handleAlert({ type: 'openAlert', title: 'Atenção', body: `O produto ${product.product_description} não está ativo para vendas, verifique o cadastro!` })
+                continue
+            }
+
             props.handleSale({ type: 'addProduct', product })
         }
-
+        
         if (stopCondition) {
             return false
         }
