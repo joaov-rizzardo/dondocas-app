@@ -150,5 +150,9 @@ export const saleReducer = (state, action) => {
                 })
             }
         break
+
+        case 'clearSale':
+            return innitialSale
+        break
     }
 }

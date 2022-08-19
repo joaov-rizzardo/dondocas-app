@@ -2,7 +2,7 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faPlus, faBullseye } from '@fortawesome/free-solid-svg-icons';
 import './SaleModal.scss'
 import ProductAdd from '../ProductAdd/ProductAdd';
 import { useEffect, useReducer, useState } from 'react';
@@ -13,8 +13,12 @@ import Alert from '../Alert/Alert';
 import { alertReducer, innitialAlert } from '../../reducers/alertModal/alertModal';
 import Confirm from '../Confirm/Confirm';
 import { confirmReducer, innitialConfirm } from '../../reducers/ConfirmModal/ConfirmModal';
+import { ClipLoader } from 'react-spinners';
+import InputMask from "react-input-mask";
 
 export default function SaleModal(props) {
+
+    const [loading, setLoading] = useState(false)
 
     const [alert, handleAlert] = useReducer(alertReducer, innitialAlert)
 
@@ -114,7 +118,7 @@ export default function SaleModal(props) {
     }
 
     // FUNÇÃO PARA EFETIVAR A VENDAS
-    const handleCreateSale = () => {
+    const handleCreateSale = async () => {
 
         // REALIZANDO AS VALIDAÇÕES NECESSÁRIAS
 
@@ -176,6 +180,58 @@ export default function SaleModal(props) {
             return false
         }
 
+        const saleAmount = sale.products.reduce((amount, product) => {
+            return amount + product.amount
+        }, 0)
+
+        const saleCost = sale.products.reduce((cost, product) => {
+            return cost + (product.product_purchase_value * product.quantity)
+        }, 0)
+
+        const products = sale.products.map(product => {
+            return {
+                product_code: product.product_code,
+                product_description: product.product_description,
+                category_key: product.category_key,
+                subcategory_key: product.subcategory_key,
+                color_key: product.color,
+                size_key: product.size,
+                product_unit_cost: product.product_purchase_value,
+                product_quantity: product.quantity,
+                product_unit_amount: product.unit_price
+            }
+        })
+
+        const payload = {
+            client : {
+                client_name: sale.client.client_name,
+                client_telephone: sale.client.client_telephone,
+                unidentified_client: sale.client.unidentified
+            },
+            payment_key : sale.payment_form.payment_key,
+            sale_net_amount:  saleAmount - ((saleAmount * sale.payment_form.payment_discount_percent)/100),
+            sale_gross_amount : saleAmount,
+            sale_cost: saleCost,
+            products: products
+        }
+        
+        setLoading(true)
+
+        const response = await axios.post(`${baseUrl.backendApi}/sale/create`, payload)
+        .catch(error => {
+            setLoading(false)
+            handleAlert({type: 'openAlert', title: 'Erro', body: `Não foi possível se comunicar com o servidor - ${error.message}`})
+            return
+        })
+
+        if(response.data.status == 'success'){
+            handleAlert({type: 'openAlert', title: 'Sucesso', body: `Venda concluída com sucesso`})
+            handleSale({type: 'clearSale'})
+        }else {
+            handleAlert({type: 'openAlert', title: 'Erro', body: `Erro desconhecido`})
+        }
+
+        setLoading(false)
     }
 
     return (
@@ -205,7 +261,8 @@ export default function SaleModal(props) {
                             <Form.Group className="mb-3">
                                 <Form.Label>Telefone</Form.Label>
                                 <Form.Control
-                                    type="tel"
+                                    as={InputMask}
+                                    mask="(99) 99999-9999"
                                     placeholder="(99) 99999-9999"
                                     value={sale.client.client_telephone}
                                     onChange={e => handleSale({ type: 'changeClientTelephone', value: e.target.value })}
@@ -279,7 +336,7 @@ export default function SaleModal(props) {
                                                 >
                                                     <option value="">Selecione uma cor</option>
                                                     {colors.map(color => {
-                                                        return (<option key={color.color_key} value={color.color_ke}>
+                                                        return (<option key={color.color_key} value={color.color_key}>
                                                             {color.color_description}
                                                         </option>)
                                                     })}
@@ -312,7 +369,9 @@ export default function SaleModal(props) {
                     </div>
 
                     <div className="buttons">
+                        <ClipLoader loading={loading} color={'#000'} size={30} />
                         <Button onClick={handleCreateSale}>Salvar</Button>
+                        <Button onClick={() => handleSale({type: 'clearSale'})}>Limpar campos</Button>
                         <Button onClick={props.handleClose}>Fechar</Button>
                     </div>
 
