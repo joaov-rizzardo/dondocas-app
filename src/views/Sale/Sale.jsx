@@ -1,6 +1,7 @@
 import { faArrowTrendDown, faArrowTrendUp, faSackDollar } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
+import Date from '../../components/Date/Date'
 import SaleModal from '../../components/SaleModal/SaleModal'
 import './Sale.scss'
 
@@ -14,7 +15,7 @@ export default function Sale() {
 
     return (
         <main className="Sale">
-
+            <Date />
             <SaleModal handleClose={handleCloseModal} modalStatus={saleModal}/>
 
             <section className="statics">
