@@ -6,12 +6,11 @@ import { DatePicker } from "@material-ui/pickers";
 import { createTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import './Date.scss'
-import { lime, red } from "@material-ui/core/colors";
+import './DayPicker.scss'
 
 class LocalizedUtils extends DateFnsUtils {
     getDatePickerHeaderText(date) {
-        return format(date, "d MMMM yyyy", { locale: this.locale });
+        return format(date, "dd MMMM yyyy", { locale: this.locale });
     }
 }
 
@@ -23,18 +22,14 @@ const defaultMaterialTheme = createTheme({
     }
 });
 
-export default function DateFnsLocalizationExample() {
-    const [selectedDate, handleDateChange] = useState(new Date());
-
-    console.log(selectedDate)
-
+export default function DateFnsLocalizationExample(props) {
     return (
         <MuiPickersUtilsProvider utils={LocalizedUtils} locale={brLocale}>
             <ThemeProvider theme={defaultMaterialTheme}>
                 <DatePicker
                     format=" dd MMMM yyyy"
-                    value={selectedDate}
-                    onChange={handleDateChange}
+                    value={props.date}
+                    onChange={props.setDate}
                     cancelLabel="Cancelar"
                 />
             </ThemeProvider>
@@ -42,4 +37,5 @@ export default function DateFnsLocalizationExample() {
         </MuiPickersUtilsProvider>
     );
 }
+
 

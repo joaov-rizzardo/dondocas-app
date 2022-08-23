@@ -17,7 +17,7 @@ import { ClipLoader } from 'react-spinners';
 import InputMask from "react-input-mask";
 
 export default function SaleModal(props) {
-
+    
     const [loading, setLoading] = useState(false)
 
     const [alert, handleAlert] = useReducer(alertReducer, innitialAlert)

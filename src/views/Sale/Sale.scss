@@ -36,7 +36,7 @@
         }
     }
 
-    .sales{
+    .buttons{
         button{
             background: none;
             display: flex;
@@ -55,5 +55,11 @@
                 background: $hoverColor;
             }
         }
+    }
+
+    .sales{
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
     }
 }
