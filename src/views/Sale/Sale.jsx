@@ -21,11 +21,19 @@ export default function Sale() {
 
     const [date, setDate] = useState(new Date())
 
+    const [updateSale, setUpdateSale] = useState(false)
+
     const handleCloseModal = () => {
         setSaleModal(false)
     }
 
     const [sales, setSales] = useState([])
+
+    const [dailyInfo, setDailyInfo] = useState({
+        grossAmount: 0,
+        netAmount: 0,
+        cost: 0
+    })
 
     const handleGetSales = async saleDate => {
 
@@ -43,39 +51,52 @@ export default function Sale() {
         setSales(response.data)
     }
 
+    const handleGetDailyInfo = async saleDate => {
+
+        const response = await axios.post(`${baseUrl.backendApi}/sale/get/dailyInfo`, {saleDate: saleDate}).catch(error => {
+            console.log(error)
+            handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao buscar dados de venda diária - ${error.message}` })
+            return
+        })
+
+        setDailyInfo(response.data)
+    }
+
     useEffect(() => {
         const formatedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 
+        handleGetDailyInfo(formatedDate)
+
         handleGetSales(formatedDate)
 
-    }, [date])
+    }, [date, updateSale])
 
     return (
         <main className="Sale">
 
             <DayPicker date={date} setDate={setDate} />
 
-            <Alert args={alert} handleAlert={handleAlert} />
+            <Alert args={alert} closeAlert={handleAlert} />
 
-            <SaleModal handleClose={handleCloseModal} modalStatus={saleModal} />
+            <SaleModal setUpdateSale={setUpdateSale} handleClose={handleCloseModal} modalStatus={saleModal} />
 
             <section className="statics">
                 <div className="static-item">
                     <FontAwesomeIcon icon={faArrowTrendUp} className="icon" />
                     <h2>Lucro bruto diário</h2>
-                    <span>R$ 23,99</span>
+                    <span>R$ {dailyInfo.grossAmount}</span>
                 </div>
 
                 <div className="static-item">
                     <FontAwesomeIcon icon={faSackDollar} className="icon" />
                     <h2>Lucro liquido diário</h2>
-                    <span>R$ 23,99</span>
+                    <span>R$ {dailyInfo.netAmount}</span>
                 </div>
 
                 <div className="static-item">
                     <FontAwesomeIcon icon={faArrowTrendDown} className="icon" />
                     <h2>Gastos com mercadoria</h2>
-                    <span>R$ 23,99</span>
+                    <span>R$ {dailyInfo.cost}</span>
                 </div>
             </section>
 

@@ -1,0 +1,73 @@
+@import '../../configs/Colors.scss';
+
+@mixin button {
+    position: relative;
+    bottom: 10px;
+    background: $thirdColor;
+    border: none;
+    padding: 5px;
+    color: $primaryColor;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.Tag {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+
+    .configs {
+        border-radius: 5px;
+        .find-product {
+            display: grid;
+            grid-template-columns: 1fr 2fr 2fr 0.5fr;
+            gap: 10px;
+            align-items: center;
+            background: $thirdColor;
+            color: $primaryColor;
+            border-radius: 5px;
+            padding: 10px;
+
+            button {
+                @include button;
+                background: $primaryColor;
+                color: $thirdColor;
+            }
+        }
+
+        .add-product {
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr 1fr 0.5fr;
+            gap: 10px;
+
+            button{
+                @include button;
+                bottom: 0px;
+            }
+        }
+
+        .tag-items{
+            >div{
+                padding: 10px;
+                display: grid;
+                grid-template-columns: 0.5fr 2fr 2fr 2fr 1fr 0.5fr;
+                gap: 5px;
+                align-items: center;
+                border-top: 0.5px solid $thirdColor;
+                border-bottom: 0.5px solid $thirdColor;
+                color: $thirdColor;
+                background: $secondaryColor;
+                text-align: center;
+
+                button{
+                    background: none;
+                    border: none;
+                    color: $thirdColor;
+                }
+            }
+        }
+    }
+    
+}

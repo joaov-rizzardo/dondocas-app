@@ -11,10 +11,10 @@ export default function Menu(){
             <nav>
                 <Link to="/">Dashboard</Link>
                 <Link to="/vendas">Vendas</Link>
-                <Link to="/produtos">Produtos</Link>                
+                <Link to="/produtos">Produtos</Link>
+                <Link to="/etiquetas">Etiquetas</Link>                
                 <Link to="/">Fornecedores</Link>
                 <Link to="/">Clientes</Link>
-                <Link to="/">Relatórios</Link>
             </nav>
         </header>
     )
