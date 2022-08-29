@@ -34,6 +34,14 @@ export function Tag() {
 
     const [tags, handleTags] = useReducer(tagReducer, innitialTags)
 
+    const fillTags = Array()
+
+    for (let tag of tags) {
+        for (let i = 0; i < tag.quantity; i++) {
+            fillTags.push(tag)
+        }
+    }
+
     const handleAddTag = () => {
 
         const fields = Object.values(addTag)
@@ -88,10 +96,19 @@ export function Tag() {
             quantity: 1
         })
 
+        handleAlert({ type: 'openAlert', title: 'Sucesso', body: 'Produto encontrado, os campos abaixo foram preenchidos com seus dados' })
+
     }
 
     const handleGeneratePDF = () => {
-        printJS('content', 'html')
+        printJS({
+            printable: 'content',
+            type: 'html',
+            scanStyles: false,
+            style: "#content {display: grid;grid-template-columns: 1fr 1fr 1fr 1fr 1fr;}  #content >div{width: 100%; height: 80px; border:1px solid #e8e8e8; display: flex;flex-direction: column;justify-content: center;gap: 5px;align-items: center;page-break-inside: avoid;} #content >div span { display: block;font-size: 0.8em; text-align:center;}",
+            font_size: '25px',
+            documentTitle: 'Etiquetas'
+        })
     }
 
     return (
@@ -232,28 +249,44 @@ export function Tag() {
 
                 <button onClick={handleGeneratePDF}>Gerar PDF <FontAwesomeIcon style={{ fontSize: '1.5em' }} icon={faFilePdf} /></button>
 
-
-                <div id="content">
-
-                    <div>
-                        <span>01 - Sapatilhas</span>
-                        <span>R$ 23,50 a vista</span>
-                        <span>R$ 23,50 a prazo</span>
-                    </div>
-                    <div>
-                        <span>01 - Sapatilhas</span>
-                        <span>R$ 23,50 a vista</span>
-                        <span>R$ 23,50 a prazo</span>
-                    </div>
-                    <div>
-                        <span>01 - Sapatilhas</span>
-                        <span>R$ 23,50 a vista</span>
-                        <span>R$ 23,50 a prazo</span>
-                    </div>
+                <div className="tags">
+                    {tags.map(tag => {
+                        return (
+                            <div>
+                                <span>{tag.product_code} - {subcategories.find(subcategory => {
+                                    if (subcategory.subcategory_key == tag.subcategory_key) {
+                                        return subcategory
+                                    }
+                                })?.subcategory_description}</span>
+                                <span>R$ {tag.cash_value} a vista</span>
+                                <span>R$ {tag.deferred_value} a prazo</span>
+                            </div>
+                        )
+                    })}
                 </div>
 
-
             </section>
+
+            {
+                //------------------------------------------------------------------------------------------------
+                //                                  CONTEÚDO DA IMPRESSÃO
+                //------------------------------------------------------------------------------------------------
+            }
+            <div id="content">
+                {fillTags.map(tag => {
+                    return (
+                        <div>
+                            <span>{tag.product_code} - {subcategories.find(subcategory => {
+                                if (subcategory.subcategory_key == tag.subcategory_key) {
+                                    return subcategory
+                                }
+                            })?.subcategory_description}</span>
+                            <span>R$ {tag.cash_value} a vista</span>
+                            <span>R$ {tag.deferred_value} a prazo</span>
+                        </div>
+                    )
+                })}
+            </div>
         </main>
     )
 }
