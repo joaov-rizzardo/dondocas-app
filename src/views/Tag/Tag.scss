@@ -19,6 +19,7 @@
 
     .configs {
         border-radius: 5px;
+
         .find-product {
             display: grid;
             grid-template-columns: 1fr 2fr 2fr 0.5fr;
@@ -42,14 +43,14 @@
             grid-template-columns: 1fr 2fr 1fr 1fr 1fr 0.5fr;
             gap: 10px;
 
-            button{
+            button {
                 @include button;
                 bottom: 0px;
             }
         }
 
-        .tag-items{
-            >div{
+        .tag-items {
+            >div {
                 padding: 10px;
                 display: grid;
                 grid-template-columns: 0.5fr 2fr 2fr 2fr 1fr 0.5fr;
@@ -61,7 +62,7 @@
                 background: $secondaryColor;
                 text-align: center;
 
-                button{
+                button {
                     background: none;
                     border: none;
                     color: $thirdColor;
@@ -70,41 +71,56 @@
         }
     }
 
-    .preview{
+    .preview {
         padding: 0 10px;
 
-        button{
+        button {
             background: $thirdColor;
             border: none;
             padding: 10px;
+            width: 100%;
             border-radius: 10px;
             color: $primaryColor;
             margin-bottom: 10px;
             display: flex;
+            justify-content: center;
             gap: 10px;
         }
 
-        .tags{
+        .tags {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 10px;
             width: 100%;
-            
-            >div{
+
+            >div {
                 width: 100%;
-                height: 80px;
-                border: 1px solid #e8e8e8;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                gap: 5px;
-                align-items: center;
-                page-break-after: always;
-    
-                span{
-                    display: block;
-                    font-size: 0.8em;
+                border: 1px solid $thirdColor;
+                border-radius: 5px;
+
+                h4 {
+                    background: $thirdColor;
+                    color: $primaryColor;
+                    width: 100%;
+                    text-align: center;
+                    margin: 0;
                 }
-            } 
+
+                >div {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 5px;
+                    align-items: center;
+                    padding: 5px;
+
+                    span {
+                        display: block;
+                        color: $thirdColor;
+                        font-size: 0.8em;
+                    }
+                }
+            }
         }
 
 
@@ -113,5 +129,5 @@
     #content {
         display: none;
     }
-    
+
 }
