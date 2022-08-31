@@ -273,6 +273,7 @@ export default function Product() {
                             <Form.Control
                                 type="text"
                                 placeholder="Digite o código"
+                                maxlength="4"
                                 value={state.productCode}
                                 onChange={e => { dispatch({ type: 'changeCode', value: e.target.value }) }}
                             />
