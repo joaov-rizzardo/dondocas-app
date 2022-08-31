@@ -1,4 +1,4 @@
-import { faPlus, faPrint, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faFilePdf, faPlus, faSearch, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Alert from '../../components/Alert/Alert';
 import { useReducer } from 'react'
@@ -11,7 +11,6 @@ import './Tag.scss'
 import axios from 'axios';
 import baseUrl from '../../configs/Url';
 import printJS from 'print-js';
-import abbreviateWord from '../../services/AbbreviateWord';
 
 export function Tag() {
 
@@ -106,7 +105,7 @@ export function Tag() {
             printable: 'content',
             type: 'html',
             scanStyles: false,
-            style: "#content {display: block;}  #content >div{width: 100px; height: 50px; border:1px solid #e8e8e8; display: inline-block; word-wrap: break-word;page-break-inside: avoid;}#content >div #content-data{display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 1px;} #content >div span { display: block;font-size: 0.8em; text-align:center;}",
+            style: "#content {display: grid;grid-template-columns: 1fr 1fr 1fr 1fr 1fr;}  #content >div{width: 100%; height: 80px; border:1px solid #e8e8e8; display: flex;flex-direction: column;justify-content: center;gap: 5px;align-items: center;page-break-inside: avoid;} #content >div span { display: block;font-size: 0.8em; text-align:center;}",
             font_size: '25px',
             documentTitle: 'Etiquetas'
         })
@@ -248,23 +247,19 @@ export function Tag() {
 
             <section className="preview">
 
-                <button onClick={handleGeneratePDF}>Imprimir Etiquetas<FontAwesomeIcon style={{ fontSize: '1.5em' }} icon={faPrint} /></button>
+                <button onClick={handleGeneratePDF}>Gerar PDF <FontAwesomeIcon style={{ fontSize: '1.5em' }} icon={faFilePdf} /></button>
 
                 <div className="tags">
                     {tags.map(tag => {
                         return (
                             <div>
-                                <h4>x{tag.quantity}</h4>
-                                <div>
-                                    <span>{tag.product_code} - {subcategories.find(subcategory => {
-                                        if (subcategory.subcategory_key == tag.subcategory_key) {
-                                            return subcategory
-                                        }
-                                    })?.subcategory_description}</span>
-                                    <span>{parseFloat(tag.cash_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} a vista</span>
-                                    <span>{parseFloat(tag.deferred_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} a prazo</span>
-                                </div>
-
+                                <span>{tag.product_code} - {subcategories.find(subcategory => {
+                                    if (subcategory.subcategory_key == tag.subcategory_key) {
+                                        return subcategory
+                                    }
+                                })?.subcategory_description}</span>
+                                <span>R$ {tag.cash_value} a vista</span>
+                                <span>R$ {tag.deferred_value} a prazo</span>
                             </div>
                         )
                     })}
@@ -279,19 +274,15 @@ export function Tag() {
             }
             <div id="content">
                 {fillTags.map(tag => {
-                    const subcategoryDescription = subcategories.find(subcategory => {
-                        if (subcategory.subcategory_key == tag.subcategory_key) {
-                            return subcategory
-                        }
-                    })?.subcategory_description
                     return (
                         <div>
-                            <div id="content-data">
-                                <span>{tag.product_code}-{abbreviateWord(subcategoryDescription, 13)}</span>
-                                <span>AV {parseFloat(tag.cash_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} </span>
-                                <span>AP {parseFloat(tag.deferred_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
-                            </div>
-
+                            <span>{tag.product_code} - {subcategories.find(subcategory => {
+                                if (subcategory.subcategory_key == tag.subcategory_key) {
+                                    return subcategory
+                                }
+                            })?.subcategory_description}</span>
+                            <span>R$ {tag.cash_value} a vista</span>
+                            <span>R$ {tag.deferred_value} a prazo</span>
                         </div>
                     )
                 })}
