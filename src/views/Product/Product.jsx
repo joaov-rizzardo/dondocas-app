@@ -51,6 +51,7 @@ export default function Product() {
 
     const [filter, handleFilter] = useReducer(filterReducer, innitialFilter)
 
+    console.log(process.env)
     //----------------------------------------------------------------------------------------
     //                                  FUNCTIONS
     //----------------------------------------------------------------------------------------

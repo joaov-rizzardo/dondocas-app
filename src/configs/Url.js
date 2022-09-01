@@ -1,5 +1,5 @@
 const baseUrl = {
-    backendApi: 'http://localhost:8000'
+    backendApi: process.env.REACT_APP_BACKEND_URL
 }
 
 export default baseUrl
