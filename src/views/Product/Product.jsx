@@ -50,8 +50,7 @@ export default function Product() {
     const [alert, handleAlert] = useReducer(alertReducer, innitialAlert)
 
     const [filter, handleFilter] = useReducer(filterReducer, innitialFilter)
-
-    console.log(process.env)
+    
     //----------------------------------------------------------------------------------------
     //                                  FUNCTIONS
     //----------------------------------------------------------------------------------------
@@ -116,8 +115,20 @@ export default function Product() {
 
     // FUNÇÃO RESPONSÁVEL POR CRIAR E ATUALZIAR PRODUTOS
     const handleSaveProduct = async () => {
-
+        
         setModalLoading(true)
+
+        if(state.productCode?.length > 4){
+            handleAlert({ type: 'openAlert', title: 'Atenção!', body: 'Apenas 4 caracteres são permitidos para o código do produto!' })
+            setModalLoading(false)
+            return
+        }
+
+        if(state.productDescription?.length > 20){
+            handleAlert({ type: 'openAlert', title: 'Atenção!', body: 'Apenas 20 caracteres são permitidos para o descrição do produto!' })
+            setModalLoading(false)
+            return
+        }
 
         // VALIDAÇÃO SE OS CAMPOS ESTÃO PREENCHIDOS
         const fields = Object.values(state)
@@ -287,6 +298,7 @@ export default function Product() {
                                 type="text"
                                 placeholder="Digite a descrição"
                                 value={state.productDescription}
+                                maxlength="20"
                                 onChange={e => dispatch({ type: 'changeDescription', value: e.target.value })}
                             />
                         </Form.Group>
