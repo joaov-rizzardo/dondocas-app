@@ -252,15 +252,18 @@ export function Tag() {
 
                 <div className="tags">
                     {tags.map(tag => {
+
+                        const subcategoryDescription = subcategories.find(subcategory => {
+                            if (subcategory.subcategory_key == tag.subcategory_key) {
+                                return subcategory
+                            }
+                        })?.subcategory_description
+
                         return (
                             <div>
                                 <h4>x{tag.quantity}</h4>
                                 <div>
-                                    <span>{tag.product_code} - {subcategories.find(subcategory => {
-                                        if (subcategory.subcategory_key == tag.subcategory_key) {
-                                            return subcategory
-                                        }
-                                    })?.subcategory_description}</span>
+                                    <span>{tag.product_code} - {abbreviateWord(subcategoryDescription, 13)}</span>
                                     <span>{parseFloat(tag.cash_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} a vista</span>
                                     <span>{parseFloat(tag.deferred_value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })} a prazo</span>
                                 </div>
