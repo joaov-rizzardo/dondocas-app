@@ -1,0 +1,10 @@
+.Expense{
+    
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .MonthPicker{
+        width: 100%;
+    }
+}
