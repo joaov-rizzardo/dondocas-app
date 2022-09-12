@@ -96,7 +96,7 @@ export default function ProductItem(props) {
                 </div>
 
                 <div className="item">
-                    <span className="title">Valor de compra</span>
+                    <span className="title">Custo</span>
                     <span>R$ {props.product.product_purchase_value}</span>
                 </div>
 

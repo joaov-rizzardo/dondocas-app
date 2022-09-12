@@ -9,12 +9,9 @@ export default function Menu(){
             </div>
 
             <nav>
-                <Link to="/">Dashboard</Link>
-                <Link to="/vendas">Vendas</Link>
+                <Link to="/">Vendas</Link>
                 <Link to="/produtos">Produtos</Link>
                 <Link to="/etiquetas">Etiquetas</Link>                
-                <Link to="/">Fornecedores</Link>
-                <Link to="/">Clientes</Link>
             </nav>
         </header>
     )
