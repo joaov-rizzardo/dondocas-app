@@ -38,7 +38,7 @@ export default function SaleItem(props) {
                 <div className="items">
                     {props.sale.products.map(product => {
                         return (
-                            <div>
+                            <div key={(product.product_key + product.subcategory_key)}>
                                 <span>{product.product_code}</span>
                                 <span>{product.product_description}</span>
                                 <span>{product.subcategory_description}</span>
