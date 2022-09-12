@@ -21,7 +21,7 @@ export default function Sale() {
 
     const [date, setDate] = useState(new Date())
 
-    const [updateSale, setUpdateSale] = useState(false)
+    const [updateSale, setUpdateSale] = useState(true)
 
     const handleCloseModal = () => {
         setSaleModal(false)
@@ -44,16 +44,16 @@ export default function Sale() {
             return
         })
 
-        if(response){
+        if (response) {
             setLoading(false)
         }
-        
+
         setSales(response.data)
     }
 
     const handleGetDailyInfo = async saleDate => {
 
-        const response = await axios.post(`${baseUrl.backendApi}/sale/get/dailyInfo`, {saleDate: saleDate}).catch(error => {
+        const response = await axios.post(`${baseUrl.backendApi}/sale/get/dailyInfo`, { saleDate: saleDate }).catch(error => {
             console.log(error)
             handleAlert({ type: 'openAlert', title: 'Erro', body: `Erro ao buscar dados de venda diária - ${error.message}` })
             return
@@ -63,11 +63,18 @@ export default function Sale() {
     }
 
     useEffect(() => {
-        const formatedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 
-        handleGetDailyInfo(formatedDate)
+        if (updateSale === true) {
+            
+            const formatedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 
-        handleGetSales(formatedDate)
+            handleGetDailyInfo(formatedDate)
+
+            handleGetSales(formatedDate)
+
+            setUpdateSale(false)
+        }
+
 
     }, [date, updateSale])
 
@@ -108,9 +115,8 @@ export default function Sale() {
 
             {!loading ? <section className="sales">
                 {sales.map(sale => {
-                    return <SaleItem sale={sale} />
+                    return <SaleItem key={sale.sale_key} sale={sale} />
                 })}
-
             </section> : ''}
 
         </main>
