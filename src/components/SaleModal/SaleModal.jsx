@@ -227,7 +227,7 @@ export default function SaleModal(props) {
         if(response.data.status == 'success'){
             handleAlert({type: 'openAlert', title: 'Sucesso', body: `Venda concluída com sucesso`})
             handleSale({type: 'clearSale'})
-            props.setUpdateSale(true)
+            props.setUpdateSale(prevState => !prevState)
         }else {
             handleAlert({type: 'openAlert', title: 'Erro', body: `Erro desconhecido`})
         }
