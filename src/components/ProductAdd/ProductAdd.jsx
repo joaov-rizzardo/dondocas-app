@@ -103,20 +103,7 @@ export default function ProductAdd(props) {
 
         // PERCORRE OS PRODUTOS RETORNADOS - TEORICAMENTE É PARA RETORNAR APENAS UM
         for (let product of products) {
-
-            // VERIFICA SE O PRODUTO JÁ FOI INSERIDO ANTERIORMENTE NA VENDA
-            const productExists = props.saleProducts.find(saleProduct => {
-                if (saleProduct.product_key == product.product_key) {
-                    return saleProduct
-                }
-            })
             
-            if (productExists) {
-                stopCondition = true
-                handleAlert({ type: 'openAlert', title: 'Atenção', body: `O produto ${product.product_description} já foi inserido na venda` })
-                continue
-            }
-
             // VERIFICA SE O PRODUTO ESTÁ ATIVO PARA VENDAS
             if(product.product_status != 'A'){
                 stopCondition = true
