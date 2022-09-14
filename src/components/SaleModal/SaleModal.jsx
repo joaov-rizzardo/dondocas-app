@@ -111,9 +111,9 @@ export default function SaleModal(props) {
     }, [])
 
     // FUNÇÃO PARA REMOVER PRODUTO DA VENDA
-    const handleRemoveProduct = product_key => {
+    const handleRemoveProduct = id => {
         handleConfirm({type: 'openConfirm', title: 'Atenção', body: 'Tem certeza que deseja remover o produto da venda?', callback: () => {
-            handleSale({type: 'removeProduct', product_key: product_key})
+            handleSale({type: 'removeProduct', id: id})
             handleConfirm({type: 'closeConfirm'})
         }})
     }
@@ -235,7 +235,7 @@ export default function SaleModal(props) {
 
         setLoading(false)
     }
-
+    
     return (
         <>
             <Alert args={alert} closeAlert={handleAlert} />
@@ -315,13 +315,13 @@ export default function SaleModal(props) {
                             <tbody>
                                 {sale.products.map(product => {
                                     return (
-                                        <tr key={product.product_key}>
+                                        <tr key={product.id}>
                                             <td>{product.product_code}</td>
                                             <td>{product.product_description}</td>
                                             <td>
                                                 <Form.Select
                                                     value={product.size}
-                                                    onChange={e => handleSale({ type: 'changeSize', product_key: product.product_key, size: e.target.value })}
+                                                    onChange={e => handleSale({ type: 'changeSize', id: product.id, size: e.target.value })}
                                                 >
                                                     <option value="">Selecione um tamanho</option>
                                                     {sizes.filter(size => {
@@ -334,7 +334,7 @@ export default function SaleModal(props) {
                                             <td>
                                                 <Form.Select
                                                     value={product.color}
-                                                    onChange={e => handleSale({ type: 'changeColor', color: e.target.value, product_key: product.product_key })}
+                                                    onChange={e => handleSale({ type: 'changeColor', color: e.target.value, id: product.id })}
                                                 >
                                                     <option value="">Selecione uma cor</option>
                                                     {colors.map(color => {
@@ -348,11 +348,11 @@ export default function SaleModal(props) {
                                                 if (e.target.value == '0') {
                                                     handleAlert({ type: 'openAlert', title: 'Atenção!', body: 'A quantidade de itens não pode ser igual a zero!' })
                                                 } else {
-                                                    handleSale({ type: 'changeQuantity', product_key: product.product_key, quantity: e.target.value })
+                                                    handleSale({ type: 'changeQuantity', id: product.id, quantity: e.target.value })
                                                 }
                                             }} /></td>
                                             <td>R$ {product.amount}</td>
-                                            <td><button onClick={e => handleRemoveProduct(product.product_key)}><FontAwesomeIcon icon={faTrash} /></button></td>
+                                            <td><button onClick={e => handleRemoveProduct(product.id)}><FontAwesomeIcon icon={faTrash} /></button></td>
                                         </tr>
                                     )
                                 })}
