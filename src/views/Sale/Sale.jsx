@@ -64,17 +64,11 @@ export default function Sale() {
 
     useEffect(() => {
 
-        if (updateSale === true) {
-            
-            const formatedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+        const formatedDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
 
-            handleGetDailyInfo(formatedDate)
+        handleGetDailyInfo(formatedDate)
 
-            handleGetSales(formatedDate)
-
-            setUpdateSale(false)
-        }
-
+        handleGetSales(formatedDate)
 
     }, [date, updateSale])
 
