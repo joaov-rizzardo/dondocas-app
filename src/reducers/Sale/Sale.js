@@ -19,12 +19,19 @@ export const saleReducer = (state, action) => {
         // SE payment_type == V -> PAGAMENTO A VISTA // SE != -> PAGAMENTO A PRAZO
         let unit_price = state.payment_form.payment_type == 'V' ? action.product.product_cash_payment_value : action.product.product_deferred_payment_value
 
+        const maxId = state.products.length == 0 ? 0 : state.products.reduce((currentValue = 0, product) => {
+            if (product.id > currentValue) {
+                return product.id
+            }
+        }, 0)
+
             return {
                 ...state,
                 products: [
                     ...state.products,
                     {
                         ...action.product,
+                        id: maxId + 1,
                         quantity: 1,
                         unit_price:  unit_price,
                         amount : unit_price,
@@ -38,7 +45,7 @@ export const saleReducer = (state, action) => {
         case 'changeQuantity':
 
             const products = state.products.map(product => {
-                if (product.product_key == action.product_key) {
+                if (product.id == action.id) {
                     return { ...product, quantity: action.quantity, amount: product.unit_price *  action.quantity}
                 } else {
                     return product
@@ -77,7 +84,7 @@ export const saleReducer = (state, action) => {
             return{
                 ...state,
                 products : state.products.map(product => {
-                    if(product.product_key == action.product_key){
+                    if(product.id == action.id){
                         return {
                             ...product,
                             color: action.color
@@ -94,7 +101,7 @@ export const saleReducer = (state, action) => {
             return{
                 ...state,
                 products : state.products.map(product => {
-                    if(product.product_key == action.product_key){
+                    if(product.id == action.id){
                         return {
                             ...product,
                             size: action.size
@@ -144,7 +151,7 @@ export const saleReducer = (state, action) => {
             return {
                 ...state,
                 products: state.products.filter(product => {
-                    if(product.product_key != action.product_key){
+                    if(product.id != action.id){
                         return product
                     }
                 })
