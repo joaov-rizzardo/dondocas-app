@@ -119,8 +119,6 @@ export default function ProductAdd(props) {
         }
 
         setProducts([])
-
-        handleAlert({ type: 'openAlert', title: 'Sucesso', body: 'O produto foi adicionado com sucesso na venda' })
     }
 
     return (
@@ -203,7 +201,6 @@ export default function ProductAdd(props) {
                                     <tr>
                                         <th>Código</th>
                                         <th>Descrição</th>
-                                        <th>Valor de compra</th>
                                         <th>Preço a prazo</th>
                                         <th>Preço a vista</th>
                                     </tr>
@@ -215,7 +212,6 @@ export default function ProductAdd(props) {
                                             <tr key={product.product_key}>
                                                 <td>{product.product_code}</td>
                                                 <td>{product.product_description}</td>
-                                                <td>{product.product_purchase_value}</td>
                                                 <td>{product.product_deferred_payment_value}</td>
                                                 <td>{product.product_cash_payment_value}</td>
                                             </tr>
