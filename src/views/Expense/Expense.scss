@@ -100,13 +100,65 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
-        gap: 30px;
+        gap: 50px;
 
         .expense-item{
             width: 300px;
             height: 350px;
             background: $thirdColor;
             border-radius: 10px;
+            padding: 16px;
+        }
+
+        .expense-item-header{
+            display: grid;
+            grid-template-columns: 0.7fr 1fr;
+            height: 30%;
+
+            .expense-item-icon{
+                display: flex;
+                align-items: center;
+                font-size: 6em;
+                color: $secondaryColor;
+            }
+
+            .expense-item-info{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-between;
+                color: $primaryColor;
+            }
+        }
+
+        .expense-item-body{
+            padding: 10px 0;
+            height: 60%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #a09e9e;
+        }
+
+        .expense-item-buttons{
+            display: flex;
+            justify-content: flex-end;
+            padding: 5px 0;
+            gap: 10px;
+            height: 10%;
+
+            button{
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                background: none;
+                border: none;
+                color: $thirdColor;
+                background: $secondaryColor;
+
+                &:hover{
+                    filter: brightness(0.9);
+                }
+            }
         }
     }
 }
