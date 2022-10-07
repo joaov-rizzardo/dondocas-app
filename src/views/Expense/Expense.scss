@@ -61,6 +61,20 @@
         .expense-chart {
             display: flex;
             justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: $primaryColor;
+
+            .not-found-chart{
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+                font-size: 7em;
+                h3{
+                    font-weight: 200;
+                }
+            }
+            
         }
 
 
@@ -112,7 +126,7 @@
 
         .expense-item-header{
             display: grid;
-            grid-template-columns: 0.7fr 1fr;
+            grid-template-columns: 1fr 1fr;
             height: 30%;
 
             .expense-item-icon{

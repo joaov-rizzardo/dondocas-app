@@ -62,6 +62,7 @@ export default function ExpenseModal(props) {
                 setLoading(false)
                 handleAlert({ type: 'openAlert', title: 'Sucesso', body: `Despesa cadastrada com sucesso` })
                 props.handleExpense({ type: 'clearExpense' })
+                props.handleUpdateData(state => !state)
                 return
 
             } else {
@@ -69,7 +70,7 @@ export default function ExpenseModal(props) {
                 handleAlert({ type: 'openAlert', title: 'Erro', body: `Ocorreu um erro inesperado- ${response.data?.message}` })
                 return
             }
-
+              
         // FLUXO PARA O CASO DE UPDATE
         } else {
 
@@ -90,6 +91,7 @@ export default function ExpenseModal(props) {
             if (response.data?.status == 'success') {
                 setLoading(false)
                 handleAlert({ type: 'openAlert', title: 'Sucesso', body: `Despesa atualizada com sucesso` })
+                props.handleUpdateData(state => !state)
                 return
 
             } else {
