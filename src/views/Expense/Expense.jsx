@@ -1,5 +1,5 @@
 
-import { faChartPie, faDollar, faFileInvoice, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faChartSimple, faDollar, faFileInvoice, faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { useEffect } from 'react'
@@ -172,7 +172,7 @@ export default function Expense() {
                         :
                         <div className="not-found-chart">
                             <h3>Nenhuma despesa registrada para o mês selecionado</h3>
-                            <FontAwesomeIcon icon={faChartPie} />
+                            <FontAwesomeIcon icon={faChartSimple} />
                         </div>
                     }
                 </div>
