@@ -1,0 +1,178 @@
+@import '../../configs/Colors.scss';
+
+.Expense {
+
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    .MonthPicker {
+        width: 100%;
+    }
+
+    .gauges {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        height: 300px;
+        gap: 30px;
+
+        >div {
+            background: $thirdColor;
+            border-radius: 10px;
+        }
+
+        .expense-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            justify-content: space-around;
+            align-items: center;
+            padding: 32px;
+
+            .icon {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 5em;
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                background: $primaryColor;
+                color: $thirdColor;
+            }
+
+            .total-expense {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                h2 {
+                    color: $primaryColor;
+                    font-size: 3em;
+                    font-weight: 300;
+                }
+
+                span {
+                    color: $secondaryColor;
+                }
+            }
+
+        }
+
+        .expense-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: $primaryColor;
+
+            .not-found-chart{
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
+                font-size: 7em;
+                h3{
+                    font-weight: 200;
+                }
+            }
+            
+        }
+
+
+    }
+
+    .expense-filter {
+        display: flex;
+        gap: 10px;
+
+        button {
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            text-align: center;
+            padding: 10px 20px;
+            border: 1px solid $thirdColor;
+            background: $thirdColor;
+            color: $primaryColor;
+            border-radius: 20px;
+            cursor: pointer;
+
+            &:hover {
+                background: $hoverColor;
+                border-color: $hoverColor;
+            }
+        }
+
+        select{
+            width: 400px;
+            border-radius: 20px;
+        }
+    }
+
+    .expense-list{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 50px;
+
+        .expense-item{
+            width: 300px;
+            height: 350px;
+            background: $thirdColor;
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .expense-item-header{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 30%;
+
+            .expense-item-icon{
+                display: flex;
+                align-items: center;
+                font-size: 6em;
+                color: $secondaryColor;
+            }
+
+            .expense-item-info{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: space-between;
+                color: $primaryColor;
+            }
+        }
+
+        .expense-item-body{
+            padding: 10px 0;
+            height: 60%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #a09e9e;
+        }
+
+        .expense-item-buttons{
+            display: flex;
+            justify-content: flex-end;
+            padding: 5px 0;
+            gap: 10px;
+            height: 10%;
+
+            button{
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                background: none;
+                border: none;
+                color: $thirdColor;
+                background: $secondaryColor;
+
+                &:hover{
+                    filter: brightness(0.9);
+                }
+            }
+        }
+    }
+}

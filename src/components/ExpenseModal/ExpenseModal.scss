@@ -1,0 +1,27 @@
+@import '../../configs/Colors.scss';
+
+.ExpenseModal {
+
+    .modal-footer {
+        div.buttons {
+            display: flex;
+            gap: 10px;
+
+            button {
+                color: $primaryColor;
+                background: $thirdColor;
+                border: none;
+
+                &:hover{
+                    background: $hoverColor;
+                }
+            }
+        }
+    }
+
+    .grid-form{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+}
