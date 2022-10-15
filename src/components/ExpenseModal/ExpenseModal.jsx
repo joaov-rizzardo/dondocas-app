@@ -124,7 +124,7 @@ export default function ExpenseModal(props) {
                         <Form.Group className="mb-3">
                             <Form.Label>Valor da despesa</Form.Label>
                             <Form.Control
-                                type="text"
+                                type="number"
                                 placeholder="Digite o valor"
                                 value={props.expense.expense_value}
                                 onChange={e => props.handleExpense({ type: 'changeValue', expense_value: e.target.value })}
