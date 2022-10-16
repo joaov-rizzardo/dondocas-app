@@ -15,6 +15,7 @@ import Confirm from '../Confirm/Confirm';
 import { confirmReducer, innitialConfirm } from '../../reducers/ConfirmModal/ConfirmModal';
 import { ClipLoader } from 'react-spinners';
 import InputMask from "react-input-mask";
+import { getFormatedDateTime } from '../../services/FormatDate';
 
 export default function SaleModal(props) {
     
@@ -119,7 +120,6 @@ export default function SaleModal(props) {
 
     // FUNÇÃO PARA EFETIVAR A VENDAS
     const handleCreateSale = async () => {
-
         // REALIZANDO AS VALIDAÇÕES NECESSÁRIAS
 
         // VALIDAÇÃO DOS DADOS DE CLIENTE
@@ -212,6 +212,7 @@ export default function SaleModal(props) {
             sale_net_amount:  saleAmount - ((saleAmount * sale.payment_form.payment_discount_percent)/100),
             sale_gross_amount : saleAmount,
             sale_cost: saleCost,
+            sale_date: getFormatedDateTime(props.saleDate) ?? '',
             products: products
         }
         

@@ -10,6 +10,7 @@ import { alertReducer, innitialAlert } from '../../reducers/alertModal/alertModa
 import Alert from '../Alert/Alert';
 import axios from 'axios';
 import baseUrl from '../../configs/Url';
+import { getFormatedDateTime } from '../../services/FormatDate';
 
 export default function ExpenseModal(props) {
 
@@ -48,7 +49,8 @@ export default function ExpenseModal(props) {
             const payload = {
                 categoryKey: props.expense.category_key,
                 expenseDescription: props.expense.expense_description,
-                expenseValue: props.expense.expense_value
+                expenseValue: props.expense.expense_value,
+                expenseDate: getFormatedDateTime(props.expenseDate) ?? ''
             }
 
             const response = await axios.post(`${baseUrl.backendApi}/expense/create`, payload).catch(error => {
