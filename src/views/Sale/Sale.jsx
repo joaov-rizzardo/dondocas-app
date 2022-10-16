@@ -85,7 +85,7 @@ export default function Sale() {
 
             <Alert args={alert} closeAlert={handleAlert} />
 
-            <SaleModal setUpdateSale={setUpdateSale} handleClose={handleCloseModal} modalStatus={saleModal} />
+            <SaleModal saleDate={date} setUpdateSale={setUpdateSale} handleClose={handleCloseModal} modalStatus={saleModal} />
 
             <section className="statics">
                 <div className="static-item">
