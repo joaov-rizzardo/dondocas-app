@@ -150,7 +150,8 @@
             height: 60%;
             overflow: hidden;
             text-overflow: ellipsis;
-            color: #a09e9e;
+            color: $primaryColor;
+            font-size: 1.2em;
         }
 
         .expense-item-buttons{

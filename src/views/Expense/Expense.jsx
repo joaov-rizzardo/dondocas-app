@@ -149,7 +149,7 @@ export default function Expense() {
 
             <Alert args={alertModal} closeAlert={handleAlert} />
 
-            <ExpenseModal handleUpdateData={handleUpdateData} expense={expense} handleExpense={handleExpense} modalStatus={modal} handleClose={closeModal} />
+            <ExpenseModal expenseDate={date} handleUpdateData={handleUpdateData} expense={expense} handleExpense={handleExpense} modalStatus={modal} handleClose={closeModal} />
 
             <MonthPicker className="MonthPicker" date={date} setDate={setDate} />
 
@@ -209,7 +209,7 @@ export default function Expense() {
                             </div>
 
                             <div className="expense-item-body">
-                                <span>{expense.expense_description}</span>
+                                <span>{expense.expense_description.split("\n").map(line => <>{line}<br/></>)}</span>
                             </div>
 
                             <div className="expense-item-buttons">
