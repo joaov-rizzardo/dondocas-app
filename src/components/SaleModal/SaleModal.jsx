@@ -277,6 +277,7 @@ export default function SaleModal(props) {
                                 <Form.Check
                                     type="switch"
                                     value={sale.client.unidentified}
+                                    checked={sale.client.unidentified}
                                     onChange={e => handleSale({ type: 'changeClientUnidentified', value: e.target.checked })} />
                             </Form.Group>
                         </div>
