@@ -1,0 +1,89 @@
+@import '../../configs/Colors.scss';
+
+.Dashboard{
+    section.date-filter{
+        display: grid;
+        grid-template-columns: 1fr 1fr 0.2fr;
+        gap: 10px;
+
+        button {
+            background: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            text-align: center;
+            padding: 10px 20px;
+            border: 1px solid $thirdColor;
+            background: $thirdColor;
+            color: $primaryColor;
+            font-size: 1.5em;
+            border-radius: 20px;
+            cursor: pointer;
+
+            &:hover {
+                background: $hoverColor;
+                border-color: $hoverColor;
+            }
+        }
+    }
+
+    section.gauges{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+        margin-top: 20px;
+
+        >div{
+            background: $thirdColor;
+            color: $primaryColor;
+            font-size: 1.2em;
+            padding: 10px;
+            text-align: center;
+            border-radius: 10px;
+        }
+    }
+
+    section.charts{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    div.colorSizeChart{
+        border: 0.5px solid #e8e8e8;
+        border-radius: 10px;
+        div.chartFilter{
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+            padding: 10px;
+        }
+    }
+
+    div.lineCharts{
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        gap: 10px;
+        border: 0.5px solid #e8e8e8;
+    }
+
+    div.columnChart{
+        grid-column: 2 span;
+    }
+
+    .chartTitle{
+        background: $thirdColor;
+        color: $primaryColor;
+        padding: 5px;
+        text-align: center;
+        border-radius: 10px;
+
+        h4{
+            font-weight: 200;
+        }
+        
+    }
+}

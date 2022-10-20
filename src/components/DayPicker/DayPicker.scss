@@ -9,17 +9,19 @@
         text-align: center;
         border-radius: 10px;
         font-size: 1.5em;
+        box-shadow: 0 0 0 0;
+        outline: 0;
 
         &:hover{
             cursor: pointer;
         }
-
-        &:before{
-            border-bottom: none;
-        }
-
-        &:after{
-            border-bottom: none;
-        }
     }
+}
+
+.MuiInput-underline:before {
+    border-bottom: none !important;
+}
+
+.MuiInput-underline:after {
+    border-bottom: none !important;
 }
