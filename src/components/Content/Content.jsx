@@ -1,4 +1,5 @@
 import {Routes, Route} from  'react-router-dom'
+import Dashboard from '../../views/Dashboard/Dashboard'
 import Expense from '../../views/Expense/Expense'
 import Main from '../../views/Main/Main'
 import Product from '../../views/Product/Product'
@@ -14,6 +15,7 @@ export default function Content(){
                 <Route exact path="/" element={<Sale />}></Route>
                 <Route exact path="/etiquetas" element={<Tag />}></Route>
                 <Route exact path="/despesas" element={<Expense />}/>
+                <Route exact path="/dashboard" element={<Dashboard />}/>
             </Routes>
         </div>
     )
