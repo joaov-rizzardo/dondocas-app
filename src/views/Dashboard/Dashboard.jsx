@@ -159,7 +159,17 @@ export default function Dashboard() {
             payload = {...payload, category: chartFilter.category}
 
             if(chartFilter.subcategory != ''){
-                payload = {...payload, subcategory: chartFilter.subcategory}
+
+                const selectedSubcategory = subcategories.find(subcategory => {
+                    if(subcategory.subcategory_key == chartFilter.subcategory){
+                        return subcategory
+                    }
+                })
+
+                if(selectedSubcategory.category_key == chartFilter.category){
+                    payload = {...payload, subcategory: chartFilter.subcategory}
+                }
+                
             }
         }
 
