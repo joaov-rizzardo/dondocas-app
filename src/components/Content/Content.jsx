@@ -3,6 +3,7 @@ import Dashboard from '../../views/Dashboard/Dashboard'
 import Expense from '../../views/Expense/Expense'
 import Main from '../../views/Main/Main'
 import Product from '../../views/Product/Product'
+import { Provider } from '../../views/Provider/Provider'
 import Sale from '../../views/Sale/Sale'
 import { Tag } from '../../views/Tag/Tag'
 import './Content.scss'
@@ -16,6 +17,7 @@ export default function Content(){
                 <Route exact path="/etiquetas" element={<Tag />}></Route>
                 <Route exact path="/despesas" element={<Expense />}/>
                 <Route exact path="/dashboard" element={<Dashboard />}/>
+                <Route exact path="/fornecedores" element={<Provider />}/>
             </Routes>
         </div>
     )

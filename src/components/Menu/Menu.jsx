@@ -13,6 +13,7 @@ export default function Menu(){
                 <Link to="/">Vendas</Link>
                 <Link to="/despesas">Despesas</Link> 
                 <Link to="/produtos">Produtos</Link>
+                <Link to="/fornecedores">Fornecedores</Link>
                 <Link to="/etiquetas">Etiquetas</Link>            
             </nav>
         </header>
