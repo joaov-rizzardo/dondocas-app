@@ -11,6 +11,7 @@ import Alert from '../Alert/Alert';
 import axios from 'axios';
 import baseUrl from '../../configs/Url';
 import { getFormatedDateTime } from '../../services/FormatDate';
+import { moneyMask } from '../../services/Masks';
 
 export default function ExpenseModal(props) {
 
@@ -126,10 +127,10 @@ export default function ExpenseModal(props) {
                         <Form.Group className="mb-3">
                             <Form.Label>Valor da despesa</Form.Label>
                             <Form.Control
-                                type="number"
+                                type="text"
                                 placeholder="Digite o valor"
                                 value={props.expense.expense_value}
-                                onChange={e => props.handleExpense({ type: 'changeValue', expense_value: e.target.value })}
+                                onChange={e => props.handleExpense({ type: 'changeValue', expense_value: moneyMask(e.target.value) })}
                             />
                         </Form.Group>
                     </div>

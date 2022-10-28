@@ -24,8 +24,8 @@ export default function SaleItem(props) {
                     <span>{props.sale.payment_description}</span>
                     <span>{props.sale.sale_hour}</span>
                     <div className="sale-value">
-                        <span>Valor total da venda: R$ {props.sale.sale_gross_amount}</span>
-                        <span>Valor com descontos: R$ {props.sale.sale_net_amount}</span>
+                        <span>Valor total da venda: {props.sale.sale_gross_amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                        <span>Valor com descontos: {props.sale.sale_net_amount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                     </div>
                 </div>
 
@@ -43,7 +43,7 @@ export default function SaleItem(props) {
                                 <span>{product.product_description}</span>
                                 <span>{product.subcategory_description}</span>
                                 <span>{product.product_quantity} unidade(s)</span>
-                                <span>R$ {(product.product_unit_amount * product.product_quantity)}</span>
+                                <span>{(product.product_unit_amount * product.product_quantity).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                             </div>
                         )
                     })}

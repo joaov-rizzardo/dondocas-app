@@ -97,17 +97,17 @@ export default function ProductItem(props) {
 
                 <div className="item">
                     <span className="title">Custo</span>
-                    <span>R$ {props.product.product_purchase_value}</span>
+                    <span>{props.product.product_purchase_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                 </div>
 
                 <div className="item">
                     <span className="title">Preço a vista</span>
-                    <span>R$ {props.product.product_cash_payment_value}</span>
+                    <span>{props.product.product_cash_payment_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                 </div>
 
                 <div className="item">
                     <span className="title">Preço a prazo</span>
-                    <span>R$ {props.product.product_deferred_payment_value}</span>
+                    <span>{props.product.product_deferred_payment_value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                 </div>
             </div>
 

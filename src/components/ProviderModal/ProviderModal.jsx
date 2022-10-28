@@ -64,6 +64,7 @@ export function ProviderModal(props) {
             })
 
             setLoading(false)
+            props.setUpdateProviders(prevState => !prevState)
             props.handleClose()
             return
         }
@@ -78,6 +79,7 @@ export function ProviderModal(props) {
         })
 
         setLoading(false)
+        props.setUpdateProviders(prevState => !prevState)
         props.handleClose()
     }
 
