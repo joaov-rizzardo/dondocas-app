@@ -2,7 +2,7 @@ export const innitialExpense = {
     expense_key : '',
     expense_description: '',
     category_key : '',
-    expense_value: 0,
+    expense_value: '',
     expense_status: '',
     expense_date: ''
 }

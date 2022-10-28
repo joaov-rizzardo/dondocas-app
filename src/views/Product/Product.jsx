@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { filterReducer, innitialFilter } from '../../reducers/ProductFilter/ProductFilter';
 import SkeletonLoader from '../../components/ContentLoader/SkeletonLoader';
+import { moneyMask } from '../../services/Masks';
 
 export default function Product() {
 
@@ -310,12 +311,9 @@ export default function Product() {
                             <Form.Group className="mb-3" style={{ width: '49%' }}>
                                 <Form.Label>Valor de venda a vista</Form.Label>
                                 <Form.Control
-                                    type="number"
-                                    min="0.00"
-                                    max="10000.00"
-                                    step="0.01"
+                                    type="text"
                                     value={state.productCashPaymentValue}
-                                    onChange={e => dispatch({ type: 'changeCashPaymentValue', value: e.target.value })}
+                                    onChange={e => dispatch({ type: 'changeCashPaymentValue', value: moneyMask(e.target.value)})}
                                 />
                                 <Form.Text className="text-muted">Valor que o produto será vendido</Form.Text>
                             </Form.Group>
@@ -323,12 +321,9 @@ export default function Product() {
                             <Form.Group className="mb-3" style={{ width: '49%' }}>
                                 <Form.Label>Valor de venda a prazo</Form.Label>
                                 <Form.Control
-                                    type="number"
-                                    min="0.00"
-                                    max="10000.00"
-                                    step="0.01"
+                                    type="text"
                                     value={state.productDeferredPaymentValue}
-                                    onChange={e => dispatch({ type: 'changeDeferredPaymentValue', value: e.target.value })}
+                                    onChange={e => dispatch({ type: 'changeDeferredPaymentValue', value: moneyMask(e.target.value)})}
                                 />
                             </Form.Group>
                         </div>
@@ -336,12 +331,9 @@ export default function Product() {
                         <Form.Group className="mb-3" style={{ width: '49%' }}>
                             <Form.Label>Valor de compra</Form.Label>
                             <Form.Control
-                                type="number"
-                                min="0.00"
-                                max="10000.00"
-                                step="0.01"
+                                type="text"
                                 value={state.productPurchaseValue}
-                                onChange={e => dispatch({ type: 'changePurchaseValue', value: e.target.value })}
+                                onChange={e => dispatch({ type: 'changePurchaseValue', value: moneyMask(e.target.value)})}
                             />
                             <Form.Text className="text-muted">Valor que o produto foi comprado do fornecedor</Form.Text>
                         </Form.Group>

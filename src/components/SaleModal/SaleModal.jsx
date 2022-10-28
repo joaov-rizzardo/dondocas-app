@@ -16,6 +16,7 @@ import { confirmReducer, innitialConfirm } from '../../reducers/ConfirmModal/Con
 import { ClipLoader } from 'react-spinners';
 import InputMask from "react-input-mask";
 import { getFormatedDateTime } from '../../services/FormatDate';
+import { phoneMask } from '../../services/Masks';
 
 export default function SaleModal(props) {
     
@@ -263,11 +264,8 @@ export default function SaleModal(props) {
                             <Form.Group className="mb-3">
                                 <Form.Label>Telefone</Form.Label>
                                 <Form.Control
-                                    as={InputMask}
-                                    mask="(99) 99999-9999"
-                                    placeholder="(99) 99999-9999"
                                     value={sale.client.client_telephone}
-                                    onChange={e => handleSale({ type: 'changeClientTelephone', value: e.target.value })}
+                                    onChange={e => handleSale({ type: 'changeClientTelephone', value: phoneMask(e.target.value) })}
                                     disabled={sale.client.unidentified ? 'disabled' : ''}
                                 />
                             </Form.Group>

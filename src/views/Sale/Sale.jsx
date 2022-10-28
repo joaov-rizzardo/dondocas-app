@@ -85,19 +85,19 @@ export default function Sale() {
                 <div className="static-item">
                     <FontAwesomeIcon icon={faArrowTrendUp} className="icon" />
                     <h2>Lucro bruto diário</h2>
-                    <span>R$ {dailyInfo.grossAmount}</span>
+                    <span>{dailyInfo.grossAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                 </div>
 
                 <div className="static-item">
                     <FontAwesomeIcon icon={faSackDollar} className="icon" />
                     <h2>Lucro liquido diário</h2>
-                    <span>R$ {dailyInfo.netAmount}</span>
+                    <span>{dailyInfo.netAmount.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                 </div>
 
                 <div className="static-item">
                     <FontAwesomeIcon icon={faArrowTrendDown} className="icon" />
                     <h2>Gastos com mercadoria</h2>
-                    <span>R$ {dailyInfo.cost}</span>
+                    <span>{dailyInfo.cost.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
                 </div>
             </section>
 
