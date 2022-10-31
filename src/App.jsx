@@ -3,11 +3,16 @@ import Content from "./components/Content/Content";
 import Menu from "./components/Menu/Menu";
 import './App.scss'
 
+import { AuthProvider } from "./contexts/AuthContext";
+
 export default function App() {
   return (
-    <Router>
-      <Menu />
-      <Content />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Menu />
+        <Content />
+      </Router>
+    </AuthProvider>
+
   )
 }
