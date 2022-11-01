@@ -73,7 +73,5 @@ export default function useAuth() {
         return true
     }
 
-    console.log(authenticated)
-
     return { handleLogin, authenticated, user, handleLogout }
 }
