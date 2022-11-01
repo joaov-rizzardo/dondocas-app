@@ -26,13 +26,45 @@ export default function Content(){
     return (
         <div className="Content">
             <Routes>
-                <Route exact path="/produtos" element={<ProtectedRoute><Product/></ProtectedRoute>}/>
-                <Route exact path="/" element={<ProtectedRoute><Sale /></ProtectedRoute>}></Route>
-                <Route exact path="/etiquetas" element={<ProtectedRoute><Tag/></ProtectedRoute>}></Route>
-                <Route exact path="/despesas" element={<ProtectedRoute><Expense /></ProtectedRoute>}/>
-                <Route exact path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
-                <Route exact path="/fornecedores" element={<ProtectedRoute><Provider /></ProtectedRoute>}/>
-                <Route exact path="/login" element={authenticated ? <Sale /> : <Login />}/>
+                <Route exact path="/produtos" element={
+                    <ProtectedRoute>
+                        <Product/>
+                    </ProtectedRoute>
+                }/>
+
+                <Route exact path="/" element={
+                    <ProtectedRoute>
+                        <Sale />
+                    </ProtectedRoute>
+                }/>
+
+                <Route exact path="/etiquetas" element={
+                    <ProtectedRoute>
+                        <Tag/>
+                    </ProtectedRoute>
+                }/>
+
+                <Route exact path="/despesas" element={
+                    <ProtectedRoute>
+                        <Expense />
+                    </ProtectedRoute>
+                }/>
+
+                <Route exact path="/dashboard" element={
+                    <ProtectedRoute>
+                        <Dashboard />
+                    </ProtectedRoute>
+                }/>
+
+                <Route exact path="/fornecedores" element={
+                    <ProtectedRoute>
+                        <Provider />
+                    </ProtectedRoute>
+                }/>
+
+                <Route exact path="/login" element={
+                    authenticated ? <Sale /> : <Login />
+                }/>
             </Routes>
         </div>
     )

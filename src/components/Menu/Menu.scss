@@ -19,8 +19,9 @@
         display: flex;
         gap: 5px;
         margin-top: 20px;
-        a{
+        a, button{
             color: $primaryColor;
+            background: none;
             text-decoration: none;
             padding: 10px 20px;
             border: 1px solid $primaryColor;

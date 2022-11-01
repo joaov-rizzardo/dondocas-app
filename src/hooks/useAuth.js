@@ -21,6 +21,7 @@ export default function useAuth() {
                     token: JSON.parse(token)
 
                 }).catch(error => {
+                    setAuthenticated(false)
                     return false
                 })
                 
@@ -28,6 +29,8 @@ export default function useAuth() {
                     setAuthenticated(true);
                     setUser(user)
                 }
+            }else{
+                setAuthenticated(false)
             }
         }
 
@@ -45,10 +48,12 @@ export default function useAuth() {
 
         }).catch(error => {
             console.log(error)
+            setAuthenticated(false)
             return false
         })
 
         if (authenticated === false) {
+            setAuthenticated(false)
             return false
         }
 
@@ -65,7 +70,10 @@ export default function useAuth() {
         localStorage.removeItem('token');
         setAuthenticated(false)
         setUser({})
+        return true
     }
+
+    console.log(authenticated)
 
     return { handleLogin, authenticated, user, handleLogout }
 }
