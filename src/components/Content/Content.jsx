@@ -63,7 +63,7 @@ export default function Content(){
                 }/>
 
                 <Route exact path="/login" element={
-                    authenticated ? <Sale /> : <Login />
+                    authenticated ? <Navigate to="/"/> : <Login />
                 }/>
             </Routes>
         </div>
